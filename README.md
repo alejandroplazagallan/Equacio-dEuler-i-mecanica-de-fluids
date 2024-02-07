@@ -1,0 +1,9 @@
+# Equaci&oacute; d&rsquo;Euler i mec&agrave;nica de fluids
+
+Aquest repositori cont&eacute; el meu Treball de Fi de Grau de Matem&agrave;tiques supervisat pel professor Joan Eugeni Mateu Benassar. Consta d&rsquo;una [mem&ograve;ria](https://github.com/alejandroplazagallan/equacio-deuler-i-mecanica-de-fluids/releases/download/post/memoria.pdf) i la [presentaci&oacute;](https://github.com/alejandroplazagallan/equacio-deuler-i-mecanica-de-fluids/releases/download/post/presentacio.pdf) amb la que vaig defensar el meu TFG a la convocat&ograve;ria de juliol de 2021.
+
+## Abstract
+
+L&rsquo;objectiu d&rsquo;aquest treball &eacute;s demostrar exist&egrave;ncia i unicitat de solucions prou regulars de les equacions d&rsquo;Euler i de Navier-Stokes, que s&oacute;n les equacions que regeixen el moviment dels fluids ideals i viscosos respectivament.
+
+Primerament dedu&iuml;m aquestes equacions a partir de l&rsquo;equaci&oacute; de conservaci&oacute; de la quantitat de moviment fent l&rsquo;aproximaci&oacute; de no-viscositat per les equacions d&rsquo;Euler i de fluids newtonians viscosos per les equacions de Navier-Stokes. Posteriorment, utilitzant fites d&rsquo;energia, demostrem la unicitat de soluci&oacute; d&rsquo;aquestes equacions. Per demostrar l&rsquo;exist&egrave;ncia local de solucions definides sobre espais de S&oacute;bolev, regularitzem les equacions per un par&agrave;metre *&epsilon;* per obtenir exist&egrave;ncia global de les equacions regularitzades. Fent tendir *&epsilon;* cap a 0, obtenim la soluci&oacute; local de les equacions originals. Pels fluids bidimensionals, seguim el mateix raonament, per&ograve; aplicat a la seva descomposici&oacute; d&rsquo;energia radial. Finalment, demostrem tamb&eacute; l&rsquo;exist&egrave;ncia global de soluci&oacute; pel cas de fluids bidimensionals gr&agrave;cies a una fita de la vorticitat d&rsquo;aquest tipus de fluids.
