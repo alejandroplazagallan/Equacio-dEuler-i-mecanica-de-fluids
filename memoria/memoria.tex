@@ -1,0 +1,1769 @@
+\documentclass{article}
+\usepackage[utf 8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[catalan,english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage[nottoc]{tocbibind}
+%\usepackage[hidelinks]{hyperref}
+\usepackage[left=2cm,top=2.5cm,right=1.5cm,bottom=2.5cm]{geometry}
+\renewcommand{\baselinestretch}{1.1}
+
+\numberwithin{equation}{section}
+
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\diver}{div}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\Or}{O}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Lip}{Lip}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{corollari}{Corol\textperiodcentered lari}[section]
+\newtheorem{definicio}{Definici\'{o}}[section]
+\newtheorem{proposicio}{Proposici\'{o}}[section]
+\newtheorem{postulat}{Postulat}[section]
+\newtheorem{lema}{Lema}[section]
+\begin{document}
+\selectlanguage{catalan}
+\begin{titlepage}
+\centering
+\includegraphics[width=0.40\textwidth]{../imatges/logo-uab.png}\par\vspace{1cm}
+\vspace{3cm}
+
+
+{\scshape\Huge TREBALL DE FI DE GRAU \par}
+\vspace{0.5cm}
+{\huge Equaci\'{o} d'Euler i mec\`{a}nica de fluids\par}
+\vspace{6cm}
+{\Large \textbf{Alejandro Plaza Gall\'{a}n}\\\vfill\vfill\vfill Tutor:\\ Joan Eugeni Mateu Bennassar
+\par}
+\vspace{3cm}
+\vfill
+\par
+\vfill
+\par
+\vfill
+{\large 12 de juliol de 2021\par}
+\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+
+\selectlanguage{english}
+\begin{abstract}
+\selectlanguage{catalan}
+L'objectiu d'aquest treball \'{e}s demostrar exist\`{e}ncia i unicitat de solucions prou regulars de les equacions d'Euler i de Navier-Stokes, que s\'{o}n les equacions que regeixen el moviment dels fluids ideals i viscosos respectivament.
+
+Primerament dedu\"{i}m aquestes equacions a partir de l'equaci\'{o} de conservaci\'{o} de la quantitat de moviment fent l'aproximaci\'{o} de no-viscositat per les equacions d'Euler i de fluids newtonians viscosos per les equacions de Navier-Stokes. Posteriorment, utilitzant fites d'energia, demostrem la unicitat de soluci\'{o} d'aquestes equacions. Per demostrar l'exist\`{e}ncia local de solucions definides sobre espais de S\'{o}bolev, regularitzem les equacions per un par\`{a}metre $\epsilon$ per obtenir exist\`{e}ncia global de les equacions regularitzades. Fent tendir $\epsilon$ cap a $0$, obtenim la soluci\'{o} local de les equacions originals. Pels fluids bidimensionals, seguim el mateix raonament, per\`{o} aplicat a la seva descomposici\'{o} d'energia radial. Finalment, demostrem tamb\'{e} l'exist\`{e}ncia global de soluci\'{o} pel cas de fluids bidimensionals gr\`{a}cies a una fita de la vorticitat d'aquest tipus de fluids.
+\end{abstract}
+\selectlanguage{catalan}
+
+\section{Introducci\'{o}}
+
+L'estudi matem\`{a}tic dels fluids va comen\c{c}ar amb Isaac Newton al segle XVII quan va aplicar les seves lleis de la mec\`{a}nica als fluids per poder predir el seu moviment i el seu comportament. Despr\'{e}s Leonhard Euler, en 1755, va escriure per primer cop les equacions diferencials que governen el moviment dels fluids ideals, que s\'{o}n aquells en els quals les capes contig\"{u}es del fluid no exerceixen forces tangencials unes sobre les altres. Gr\`{a}cies a aquestes equacions, el moviment d'aquest tipus de fluids ja estava completament determinat. Despr\'{e}s l'enginyer i f\'{i}sic Claude-Louis Navier en 1822 i el matem\`{a}tic George Gabriel Stokes en 1845 van trobar les equacions que porten el seu nom: les equacions de Navier-Stokes. Aquestes modelitzen els fluids viscosos: un tipus de fluids m\'{e}s generals que els fluids ideals, ja que tenen en compte les forces internes que donen lloc a la viscositat.
+\vspace{3mm}
+
+A l'any 2000 l'institut de matem\`{a}tiques Clay va proposar set problemes molt transcendents per les matem\`{a}tiques que encara estaven per resoldre:
+\begin{itemize}
+\item la conjectura de Poincar\'{e};
+\item el problema P versus PN;
+\item la conjectura de Hodge;
+\item la hip\`{o}tesi de Riemann;
+\item l'exist\`{e}ncia de Yang-Mills i el salt de massa;
+\item l'exist\`{e}ncia i regularitat de Navier-Stokes;
+\item la conjectura de Birch Swinnerton-Dyer.
+\end{itemize}
+
+Aquests s'anomenen els set problemes del mil\textperiodcentered lenni i l'institut Clay va oferir un mili\'{o} de d\`{o}lars estatunidencs a qui aconsegu\'{i}s resoldre algun d'ells. Fins ara l'\'{u}nic problema resolt ha estat la conjectura de Poincar\'{e}, que va ser resolt en 2003 per en Grigori Perelman. Els altres sis problemes encara estan oberts, dels quals el que est\`{a} relacionat amb aquest treball \'{e}s el referent a les equacions de Navier-Stokes.
+
+La unicitat d'aquestes equacions \'{e}s ben coneguda. El que planteja m\'{e}s dificultat \'{e}s demostrar l'exist\`{e}ncia de solucions prou regulars. De moment es coneixen diferents proves de l'exist\`{e}ncia local de solucions, \'{e}s a dir, se sap que donada una condici\'{o} inicial prou regular, existeix una soluci\'{o} de la mateixa regularitat definida sobre un cert interval de temps. A m\'{e}s se sap tamb\'{e} que en el cas de fluids bidimensionals, aquestes solucions estan definides globalment per tot temps.
+
+No obstant aix\`{o}, per fluids tridimensionals encara no se sap si aquestes solucions estan definides per qualsevol temps o si, en canvi, hi ha solucions que en un cert temps tenen una singularitat i per tant deixen de ser regulars. En aix\`{o} consisteix el problema del mil\textperiodcentered lenni referent a les equacions de Navier-Stokes.
+
+En aquest treball primer deduirem les equacions d'Euler i les equacions de Navier-Stokes a partir dels principis de la mec\`{a}nica com la segona llei de Newton i fent diferents aproximacions. Despr\'{e}s explicarem alguns dels conceptes matem\`{a}tics i els utilitzarem per exposar una d'aquestes proves conegudes de la unicitat de solucions, la seva exist\`{e}ncia local en el cas tridimensional i la seva exist\`{e}ncia global en el cas bidimensional. Com \'{e}s natural, en aquest treball no resoldrem el problema del mil\textperiodcentered lenni, pel qual l'exist\`{e}ncia global per fluids tridimensionals quedar\`{a} encara oberta.
+
+\section{Deducci\'{o} de les equacions d'Euler i de Navier-Stokes}
+
+Primer veiem com sorgeixen les equacions d'Euler i de Navier-Stokes. Definirem les magnituds i variables amb qu\`{e} treballarem i postularem lleis f\'{i}siques universals, les quals escriurem amb el llenguatge de fluids.
+
+\subsection{Fomulacions de Lagrange i d'Euler}
+
+Un fluid ve representat per una fam\'{i}lia de dominis $\Omega_t\subseteq\mathbb{R}^3$ amb \'{i}ndex $t$ en $[0,T]$ i una funci\'{o} $\Phi:\Omega_0\times[0,T]\rightarrow\mathbb{R}^3$ diferenciable de classe $C^2$. Escrivim $\Phi(y,t)=\Phi_t(y)$ i $\Omega_t=\Phi_t(\Omega_0)$.
+%N=3
+
+Entenem un \textbf{fluid} com un continu que inicialment omple el domini $\Omega_0$ i que evoluciona amb el temps des de $t=0$ fins $t=T$. A temps $t$, el fluid omple el domini $\Omega_t$. La funci\'{o} $\Phi$ es diu aplicaci\'{o} deformaci\'{o} i \'{e}s la que cont\'{e} la informaci\'{o} de com evoluciona el fluid, el qual podem considerar compost de part\'{i}cules infinitesimals, una per cada posici\'{o} $y\in\Omega_0$. Llavors el valor $x=\Phi(y,t)$ indica la \textbf{posici\'{o}} en qu\`{e} es troba a temps $t$ la part\'{i}cula que inicialment es trobava a la posici\'{o} $y$. En particular, fixat $y\in\Omega_0$, variant $t$, $\Phi(y,\cdot)$ \'{e}s la traject\`{o}ria que segueix la part\'{i}cula que a $t=0$ est\`{a} en $y$.
+
+Aquesta visi\'{o} ens suggereix que $\Phi$ ha de complir unes propietats que enunciem a continuaci\'{o}.
+
+\begin{definicio}
+L'\textbf{aplicaci\'{o} deformaci\'{o}} $\Phi:\Omega_0\times[0,T]\rightarrow\mathbb{R}^3$ \'{e}s una aplicaci\'{o} tal que:
+\begin{itemize}
+\item per tot $t\in[0,T]$, $\Phi_t:\Omega_0\rightarrow\Omega_t$ \'{e}s un difeomorfisme de classe $C^2$,
+\item $\Phi_0:\Omega_0\rightarrow\Omega_0$ \'{e}s la identitat.
+\end{itemize}
+
+Denotem $I=[0,T]$ l'interval de temps.
+\end{definicio}
+
+\begin{definicio}
+Definim l'\textbf{espai de posicions} $\Delta=\{(x,t)\in\mathbb{R}^3\times I\,|\,x\in\Omega_t\}$.
+
+Definim la \textbf{velocitat} com:
+\[
+\begin{split}
+v:\Delta&\longrightarrow\mathbb{R}^3.\\
+(x,t)&\longmapsto\frac{\partial\Phi}{\partial t}(\Phi_t^{-1}(x),t)
+\end{split}
+\]
+\end{definicio}
+
+Observem que aquesta magnitud \'{e}s efectivament la velocitat, ja que si fixem $y\in\Omega_0$ i escrivim la traject\`{o}ria d'aquesta part\'{i}cula, $\gamma(t)=\Phi(y,t)$, aleshores $\gamma'(t)=v(\gamma(t),t)$. Tamb\'{e} d'aquest fet dedu\"{i}m que les traject\`{o}ries s\'{o}n les solucions de la equaci\'{o} diferencial ordin\`{a}ria:
+\begin{equation}\label{Equ. trajectoria}
+\left\{\begin{array}{l}\dot{x}=v(x,t),\\x(0)=y.\end{array}\right.
+\end{equation}
+
+Com a conseq\"{u}\`{e}ncia, un cop coneguda la velocitat d'un fluid, es poden con\`{e}ixer les traject\`{o}ries del fluid, les quals conformen l'aplicaci\'{o} deformaci\'{o} $\Phi$, que dona tota la informaci\'{o} del fluid.
+
+\begin{definicio}\label{Def: derivada material}
+Sigui $\Delta$ l'espai de posicions i $f:\Delta\rightarrow\mathbb{R}^n$ diferenciable. Sigui $F:\Omega_0\times I\rightarrow\mathbb{R}^n$ definida com $F(y,t)=f(\Phi(y,t),t)$. Definim la \textbf{derivada temporal a part\'{i}cula fixa} de $f$ com:
+\[\frac{df}{dt}(x,t)=\frac{\partial F}{\partial t}(\Phi_t^{-1}(x),t).\]
+Tamb\'{e} es diu \textbf{derivada total o material}.
+
+En contrapartida, definim la \textbf{derivada a espai fix} com simplement la derivada parcial.
+
+\[\frac{\partial f}{\partial t}(x,t)\]
+\end{definicio}
+
+\begin{proposicio}
+Siguin $\Delta$ l'espai de posicions i $f:\Delta\rightarrow\mathbb{R}$ una funci\'{o} escalar diferenciable. Aleshores
+\[\frac{df}{dt}=\frac{\partial f}{\partial t}+\langle v,\nabla f\rangle,\]
+on $\langle\cdot,\cdot\rangle$ indica el producte escalar can\`{o}nic de $\mathbb{R}^3$ i $\nabla f$ \'{e}s el gradient espacial de $f$, \'{e}s a dir, respecte la variable $x$, no respecte de $t$. De fet $\langle v,\nabla f\rangle=df(v)$ \'{e}s la derivada direccional de $f$ respecte al vector $v$.
+
+Si en canvi, tenim que $f:\Delta\rightarrow\mathbb{R}^3$ \'{e}s vectorial, llavors la derivada material t\'{e} la seg\"{u}ent expressi\'{o}:
+\[\frac{df}{dt}=\frac{\partial f}{\partial t}+v\cdot\nabla f,\]
+on $v\cdot\nabla f=df(v)$ es defineix com la derivada de $f$ al llarg del vector $v$ o, el que \'{e}s el mateix, la diferencial de $f$ aplicada al vector $v$.
+\end{proposicio}
+
+La notaci\'{o} $v\cdot\nabla f$ \'{e}s molt com\'{u} a la literatura. De fet, aquest terme es pot interpretar com la matriu jacobiana de $f$ multiplicada pel vector columna $v$. Com que la $i$-\`{e}sima fila de la jacobiana \'{e}s el gradient de la $i$-\`{e}sima component de la funci\'{o}, s'identifica la matriu jacobiana de $f$ amb el seu gradient $\nabla f$.
+
+\begin{definicio}
+Una variable es diu \textbf{lagrangiana} quan est\`{a} definida sobre $\Omega_0\times I$.
+
+Una variable es diu \textbf{euleriana} quan est\`{a} definida sobre $\Delta$.
+\end{definicio}
+
+Els fluids es poden estudiar des de dues perspectives diferents: la formulaci\'{o} lagrangiana i la formulaci\'{o} euleriana. La primera formulaci\'{o} es basa en l'estudi del fluid a trav\'{e}s de l'aplicaci\'{o} deformaci\'{o} $\Phi$, que \'{e}s una variable lagrangiana. La segona formulaci\'{o} t\'{e} com a variable central la velocitat $v$, que \'{e}s una variable euleriana.
+
+Les dues formulacions s\'{o}n equivalents, ja que donada una variable euleriana $f:\Delta\rightarrow\mathbb{R}^n$, la seva variable lagrangiana associada \'{e}s $F:\Omega_0\times I\rightarrow\mathbb{R}^n$ definida per $F(y,t)=f(\Phi(y,t),t)$, i viceversa: $f(x,t)=F(\Phi_t^{-1}(x),t)$. A m\'{e}s, coneixent $\Phi$, es pot obtenir $v$ mitjan\c{c}ant la seva definici\'{o}; per\`{o} coneixent $v$, tamb\'{e} es pot recuperar $\Phi$, que \'{e}s nom\'{e}s el flux de la EDO \ref{Equ. trajectoria}. Nosaltres utilitzarem fonamentalment la formulaci\'{o} euleriana.
+
+L'operador derivada material s'acostuma a escriure $\frac{d}{dt}$ en contextos propers a la formulaci\'{o} lagrangiana, ja que la derivada material d'una variable euleriana \'{e}s simplement la derivada parcial respecte del temps de la seva variable lagrangiana corresponent. En una formulaci\'{o} euleriana m\'{e}s pura, s'escriu com $\frac{\partial}{\partial t}+v\cdot\nabla$, ja que aquesta forma de l'operador no implica l'\'{u}s de cap variable lagrangiana.
+
+\begin{definicio}
+La \textbf{massa} \'{e}s, per cada $t\in I$, una mesura sobre la $\sigma$-\`{a}lgebra de Borel de $\Omega_t$, $m_t:\mathcal{B}(\Omega_t)\rightarrow[0,\infty]$. Imposem la condici\'{o} que sigui absolutament cont\'{i}nua amb la mesura de Lebesgue $\Vol$, \'{e}s a dir, que per tot $D\in\mathcal{B}(\Omega_t)$ amb $\Vol(D)=0$, tinguem $m(D)=0$.
+\end{definicio}
+
+Que la massa sigui absolutament cont\'{i}nua vol dir que no hi ha concentracions de massa: tot conjunt de volum nul t\'{e} massa nul\textperiodcentered la.
+
+\begin{definicio}
+El fet que per tot $t\in I$, $m_t$ sigui absolutament cont\'{i}nua implica l'exist\`{e}ncia d'una certa funci\'{o} $\rho(\cdot,t):\Omega_t\rightarrow[0,\infty)$ integrable tal que per tot $D\in\mathcal{B}(\Omega_t)$
+\[m_t(D)=\int_{\Omega_t}\rho(x,t)dx.\]
+
+Aquesta funci\'{o} se'n diu \textbf{densitat} i exigirem que sigui diferenciable.
+\end{definicio}
+
+Una llei fonamental \'{e}s la de conservaci\'{o} de la massa, present en tota la f\'{i}sica cl\`{a}ssica. En el nostre context de fluids s'expressa dient que la massa d'un domini es mant\'{e} constant en la seva evoluci\'{o} al llarg del temps a trav\'{e}s de l'aplicaci\'{o} deformaci\'{o}.
+
+\begin{postulat}\label{Pos: conservacio massa}
+Conservaci\'{o} de la massa. Sigui $D_0\in\mathcal{B}(\Omega_0)$ i per un $t\in I$ arbitrari, sigui $D_t=\Phi_t(D_0)$. Aleshores $m(D_0)=m(D_t)$.
+\end{postulat}
+
+La jacobiana de $\Phi_t$, $D(\Phi_t)$, es diu \textbf{matriu de deformaci\'{o}} i el seu determinant $J(x,t)=\det(D(\Phi_t)(\Phi_t^{-1}(x),t))$ indica l'expansi\'{o} de volum.
+Observem que com que $\Phi_0=\id_{\Omega_0}$, aleshores $J(x,0)=1$. A m\'{e}s, per tot $t\in I$, $\Phi_t$ \'{e}s un difeomorfisme. Per tant $J(x,t)\neq0$, amb el qual sempre $J(x,t)>0$. A m\'{e}s, pel teorema del canvi de variable,
+\[\Vol(D_t)=\int_{D_t}dx=\int_{D_0}Jdx.\]
+
+Aquesta relaci\'{o} mostra com $J$ expressa l'expansi\'{o} de volum.
+
+\begin{proposicio}\label{Pro: conservacio massa}
+El postulat \ref{Pos: conservacio massa} de conservaci\'{o} de massa \'{e}s equivalent a:
+\begin{equation}\label{Equ. conservacio massa}
+\frac{d(\rho J)}{dt}=0.
+\end{equation}
+\end{proposicio}
+
+L'equaci\'{o} \ref{Equ. conservacio massa} tamb\'{e} rep el nom d'\textbf{equaci\'{o} de continu\"{i}tat}. La derivada nul\textperiodcentered la indica que quan $J$ augmenta, \'{e}s a dir, quan el fluid s'expandeix, la densitat ha de disminuir i viceversa.
+
+Vegem un lema que ens ser\`{a} \'{u}til posteriorment.
+
+\begin{lema}\label{Lem: derivada integral}
+Siguin $f:\Delta\rightarrow\mathbb{R}^n$ una funci\'{o} diferenciable, $\rho$ la densitat i $D_t\in\mathcal{B}(\Omega_t)$. Tenim la seg\"{u}ent relaci\'{o} entre derivades materials i integrals.
+
+\begin{equation}
+\frac{d}{dt}\int_{D_t}\rho f\,dx=\int_{D_t}\rho\frac{df}{dt}dx
+\end{equation}
+\end{lema}
+\begin{proof}
+Comencem integrant nom\'{e}s $f$ i aplicarem el teorema del canvi de variable amb el difeomorfisme $\Phi_t$. Posem $D_0=\Phi_t^{-1}(D_t)$.
+
+\[\frac{d}{dt}\int_{D_t}f(x,t)\,dx=\frac{d}{dt}\int_{D_0}f(\Phi(y,t),t)J(\Phi(y,t),t)\,dy\]
+
+Hem aconseguit que el domini d'integraci\'{o} no depengui del temps. Per tant podem derivar sota el signe integral. Designem $\tilde{f}(y,t)=f(\Phi(y,t),t)$ i $\tilde{J}(y,t)=J(\Phi(y,t),t)$. Aquestes variables titlle s\'{o}n essencialment les respectives variables, per\`{o} en la representaci\'{o} lagrangiana.
+
+\[\frac{d}{dt}\int_{D_0}\tilde{f}(y,t)\tilde{J}(y,t)dy=\int_{D_0}\frac{\partial}{\partial t}\big(\tilde{f}(y,t)\tilde{J}(y,t)\big)=\int_{D_0}\left(\frac{\partial\tilde{f}}{\partial t}(y,t)\tilde{J}(y,t)+\tilde{f}(y,t)\frac{\partial\tilde{J}}{\partial t}(y,t)\right)dy\]\[=\int_{D_t}\left(\frac{\partial\tilde{f}}{\partial t}(\Phi_t^{-1}(x),t)+\frac{f(x,t)}{J(x,t)}\frac{\partial\tilde{J}}{\partial t}(\Phi_t^{-1}(x),t)\right)dx\]
+
+Apliquem ara la definici\'{o} \ref{Def: derivada material} de derivada material.
+
+\[\frac{d}{dt}\int_{D_t}f(x,t)dx=\int_{D_t}\left(\frac{\partial\tilde{f}}{\partial t}(\Phi_t^{-1}(x),t)+\frac{f(x,t)}{J(x,t)}\frac{\partial\tilde{J}}{\partial t}(\Phi_t^{-1}(x),t)\right)dx=\int_{D_t}\left(\frac{df}{dt}(x,t)+\frac{f(x,t)}{J(x,t)}\frac{dJ}{dt}(x,t)\right)dx\]
+
+Vegem ara ja s\'{i} la igualtat de l'enunciat. Es pot comprovar f\`{a}cilment que la derivada material compleix la regla del producte com una derivada usual.
+
+\[\frac{d}{dt}\int_{D_t}\rho f\,dx=\int_{D_t}\left(\frac{d(\rho f)}{dt}+\frac{\rho f}{J}\,\frac{dJ}{dt}\right)dx=\int_{D_t}\left(\frac{d\rho}{dt}f+\rho\frac{df}{dt}+\frac{\rho f}{J}\,\frac{dJ}{dt}\right)dx=\int_{D_t}\left(\rho\frac{df}{dt}+\frac{f}{J}\left(J\frac{d\rho}{dt}+\rho\frac{dJ}{dt}\right)\right)dx\]\[=\int_{D_t}\left(\rho\frac{df}{dt}+\frac{f}{J}\,\frac{d(\rho J)}{dt}\right)dx=\int_{D_t}\rho\frac{df}{dt}dx,\]
+ja que per l'equaci\'{o} de continu\"{i}tat expressada en la proposici\'{o} \ref{Pro: conservacio massa}, $\frac{d(\rho J)}{dt}=0$, amb el que concloem la prova.
+\end{proof}
+
+Anem a definir alguns tipus concrets de fluids que compliran unes certes hip\`{o}tesis que simplificaran les futures equacions.
+
+\begin{definicio}
+Diem que un fluid \'{e}s \textbf{incompressible} quan per tot $t\in I$, $\Phi_t$ conserva els volums, \'{e}s a dir, quan per tot $D_0\in\mathcal{B}(\Omega_0)$ $\Vol(D_t)=\Vol(\Phi_t(D_0))=\Vol(D_0)$.
+\end{definicio}
+
+Veiem que segons aquesta definici\'{o}, un fluid \'{e}s incompressible quan, agafada una regi\'{o} $D$, aquesta ni s'expandeix ni es comprimeix, sin\'{o} que mant\'{e} sempre un volum constant.
+
+\begin{proposicio}
+Un fluid \'{e}s incompressible si i nom\'{e}s si
+\begin{equation}\label{Equ. incompressible Lagrange}
+\frac{d\rho}{dt}=0.
+\end{equation}
+\end{proposicio}
+
+L'equaci\'{o} \ref{Equ. incompressible Lagrange} ens diu que un fluid \'{e}s incompressible quan la seva densitat al llarg de les traject\`{o}ries \'{e}s constant.
+
+\begin{definicio}
+Un fluid es diu \textbf{homogeni} quan per tot temps $t\in I$ dos dominis $D,E\in\mathcal{B}(\Omega_t)$ amb el mateix volum $\Vol(D)=\Vol(E)$ tenen la mateixa massa $m_t(D)=m_t(E)$.
+\end{definicio}
+
+\begin{proposicio}
+Un fluid \'{e}s homogeni si i nom\'{e}s si
+\begin{equation}
+\nabla\rho=0,
+\end{equation}
+on $\nabla$ fa refer\`{e}ncia al gradient espacial.
+\end{proposicio}
+
+Aquesta proposici\'{o} diu el que hom pot esperar: un fluid \'{e}s homogeni quan la seva densitat \'{e}s la mateixa en tots els seus punts.
+
+\begin{teorema}
+Un fluid \'{e}s incompressible si i nom\'{e}s si
+\begin{equation}
+\diver v=0.
+\end{equation}
+\end{teorema}
+
+Aquest teorema es pot veure intu\"{i}tivament, ja que si la diverg\`{e}ncia de la velocitat en un punt fos positiva, aix\`{o} voldria dir que la velocitat al voltant d'aquest punt apuntaria cap a fora i, pel principi de conservaci\'{o} de la massa, el punt es tornaria menys dens amb el temps, fent que el fluid fos compressible.
+
+\begin{proposicio}\label{Pro: homogeni inicial}
+Si un fluid incompressible \'{e}s homogeni a temps $t=0$, llavors ser\`{a} homogeni per tot temps.
+\end{proposicio}
+
+\begin{proposicio}\label{Pro: conservacio massa final}
+L'equaci\'{o} de continu\"{i}tat \ref{Equ. conservacio massa} es pot escriure de dues formes equivalents:
+\begin{equation}
+\frac{1}{\rho}\frac{d\rho}{dt}+\diver v=0,
+\end{equation}
+\begin{equation}
+\frac{\partial\rho}{\partial t}+\diver(\rho v)=0.
+\end{equation}
+\end{proposicio}
+
+\subsection{Conservaci\'{o} de la quantitat de moviment}
+La quantitat de moviment per una part\'{i}cula \'{e}s simplement el producte de la seva massa i la seva velocitat. Per un fluid, com que \'{e}s un continu, la definim de la mateixa manera, per\`{o} mitjan\c{c}ant una integral.
+
+\begin{definicio}\label{Def: quantitat moviment}
+Donat un volum $D_t\in\mathcal{B}(\Omega_t)$, podem definir la seva \textbf{quantitat de moviment} com
+\begin{equation}
+I(D_t)=\int_{D_t}v\,dm.
+\end{equation}
+\end{definicio}
+
+Sobre cada volum del fluid hi actuen una s\`{e}rie de forces, que podem descompondre en forces externes i superficials. Les primeres tenen com a causa un element extern al fluid. L'exemple m\'{e}s t\'{i}pic \'{e}s la gravetat a qu\`{e} acostuma a estar sotm\`{e}s un fluid. Per d'altra banda, les forces superficials s\'{o}n forces exercides pel mateix fluid. S\'{o}n forces que cada capa imprimeix sobre la capa contigua.
+
+\begin{definicio}\label{Def: forces}
+Donat un domini $D_t\in\mathcal{B}(\Omega_t)$, les \textbf{forces externes} s'escriuen com
+\[F_{\text{ext}}(D_t)=\int_{D_t}F(x,t)\,dx,\]
+per una certa $F:\Delta\rightarrow\mathbb{R}^3$, que \'{e}s la densitat de for\c{c}a per unitat de volum.
+
+Si la frontera $\Gamma_t=\partial D_t$ \'{e}s una superf\'{i}cie llisa amb mesura de superf\'{i}cie $dS$, llavors les \textbf{forces superficials} s'escriuen com
+\[F_{\text{sup}}(D_t)=\int_{\Gamma_t}\Pi(x,t)\,dS,\]
+per una certa $\Pi:\Gamma_t\rightarrow\mathbb{R}^3$, que es diu densitat superficial de for\c{c}a i que dep\`{e}n del domini $D_t$.
+\end{definicio}
+
+\begin{postulat}\label{Pos: quantitat moviment}
+La llei de conservaci\'{o} de la quantitat de moviment ens diu el seg\"{u}ent:
+\begin{equation}\label{Equ. quantitat moviment}
+\frac{dI(D_t)}{dt}=F_{\text{ext}}(D_t)+F_{\text{sup}}(D_t).
+\end{equation}
+\end{postulat}
+
+Aquesta \'{e}s la segona llei de Newton, que diu que la variaci\'{o} de la quantitat de moviment d'un cos \'{e}s igual a la for\c{c}a exercida sobre ell.
+
+Pel seg\"{u}ent teorema, escrivim l'espai d'aplicacions lineals $\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)=\{f:\mathbb{R}^3\rightarrow\mathbb{R}^3\,|\,f\text{ \'{e}s lineal}\}$.
+
+\begin{teorema}
+(Cauchy) Existeix una aplicaci\'{o} $S:\Delta\rightarrow\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$, anomenada \textbf{tensor d'esfor\c{c}os}, tal que per tot $D_t\in\mathcal{B}(\Omega_t)$
+\[F_{\text{sup}}(D_t)=\int_{\Gamma_t}\Pi(x,t)\,dS=\int_{\Gamma_t}S(x,t)(n)\,dS,\]
+on $n$ \'{e}s el vector unitari normal a la superf\'{i}cie $\Gamma_t$.
+\end{teorema}
+
+Si $S_{ij}$ s\'{o}n las components de la matriu de $S$ respecte de la base can\`{o}nica, les components diagonals $S_{ii}$ es diuen \textbf{esfor\c{c}os normals} i s'anomenen de \textbf{tensi\'{o}} si $S_{ii}>0$ i de \textbf{compressi\'{o}} si $S_{ii}<0$. Les components no diagonals $S_{ij}$ amb $i\neq j$ s'anomenen \textbf{esfor\c{c}os tallants}.
+
+Ara definim la diverg\`{e}ncia de tensors com el tensor d'esfor\c{c}os per poder donar una forma de l'equaci\'{o} \eqref{Equ. quantitat moviment} que no involucri integrals. Aquesta diverg\`{e}ncia d'un tensor complir\`{a} un teorema an\`{a}leg al teorema de Gauss per camps vectorials.
+
+\begin{definicio}
+Sigui $T:U\rightarrow\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$ amb $U\subseteq\mathbb{R}^3$ obert. Si $(e_1,e_2,e_3)$ \'{e}s la base can\`{o}nica de $\mathbb{R}^3$, escrivim les components de $T$ com $T_j(x)=T(x)(e_j)$, de manera que s\'{o}n funcions $T_j:U\rightarrow\mathbb{R}^3$ que suposem diferenciables. Llavors definim la \textbf{diverg\`{e}ncia} de $T$ com una funci\'{o} $\diver T:U\rightarrow\mathbb{R}^3$ tal que
+\begin{equation}
+\diver T(x)=\sum_{j=1}^3\frac{\partial T_{j}}{\partial x_j}(x).
+\end{equation}
+\end{definicio}
+
+\begin{teorema}
+(Teorema de Gauss per tensors) Sigui $T:U\rightarrow\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$ on $U\subseteq\mathbb{R}^3$ \'{e}s un obert amb frontera $\Gamma=\partial U$ llisa. Llavors
+\begin{equation}
+\int_{\Gamma}T(x)(n)\,dS=\int_U\diver T(x)dx.
+\end{equation}
+\end{teorema}
+
+\begin{proposicio}\label{Pro: conservacio moment}
+La llei de conservaci\'{o} de la quantitat de moviment \'{e}s equivalent a la seg\"{u}ent expressi\'{o}:
+\begin{equation}\label{Equ. conservacio moment}
+\frac{\partial v}{\partial t}+v\cdot\nabla v=\frac{1}{\rho}F+\frac{1}{\rho}\diver S.
+\end{equation}
+
+La diverg\`{e}ncia \'{e}s, com sempre, respecte la variable espacial, a temps fix.
+\end{proposicio}
+\begin{proof}
+Ajuntant el postulat \ref{Pos: quantitat moviment} amb les definicions \ref{Def: quantitat moviment} i \ref{Def: forces}, obtenim la seg\"{u}ent igualtat:
+\[\frac{d}{dt}\int_{D_t}\rho\,v\,dx=\int_{D_t}F\,dx+\int_{\Gamma_t}\Pi\,dS.\]
+
+Ara farem servir el teorema de Cauchy, juntament amb el teorema de Gauss per tensors, segons el qual:
+\[\int_{\Gamma_t}\Pi(x,t)dS=\int_{\Gamma_t}S(x,t)(n)dS=\int_{D_t}\diver S(x,t)dx.\]
+
+A m\'{e}s, la derivada temporal la passem a dins de la integral segons permet el lema \ref{Lem: derivada integral}, amb el que queda:
+\[\int_{D_t}\rho\frac{dv}{dt}\,dx=\int_{D_t}F\,dx+\int_{D_t}\diver S\,dx.\]
+
+Aquesta igualtat entre les integrals la tenim per tot domini $D_t$ amb frontera regular. Per tant els integrands han de ser iguals.
+
+\[\rho\left(\frac{\partial v}{\partial t}+v\cdot\nabla v\right)=\rho\frac{dv}{dt}=F+\diver S\]
+
+Amb aix\`{o} queda provada la proposici\'{o}.
+\end{proof}
+
+Aquesta expressi\'{o} de la llei de conservaci\'{o} del moment lineal \'{e}s molt important perqu\`{e}, suposant certes condicions sobre $S$, ser\`{a} l'equaci\'{o} de Euler i la equaci\'{o} de Navier-Stokes.
+
+\begin{definicio}
+Donat un domini $D_t\in\mathcal{B}(\Omega_t)$, definim el seu \textbf{moment angular} com
+\begin{equation}
+L(D_t)=\int_{D_t}x\wedge v\,dm,
+\end{equation}
+on $x\wedge v$ denota el producte vectorial dels vectors $x$ i $v$.
+\end{definicio}
+
+D'igual manera que la variaci\'{o} de quantitat de moviment d'un domini \'{e}s causada per les forces externes i les forces superficials, la variaci\'{o} de moment angular ser\`{a} la suma dels moments d'aquestes forces.
+
+\begin{postulat}
+La llei de conservaci\'{o} del moment angular ens diu que per tot $D_t\in\mathcal{B}(\Omega_t)$ amb vora $\partial D_t=\Gamma_t$ llisa,
+\begin{equation}
+\frac{d}{dt}\int_{D_t}\rho\,x\wedge v\,dx=\int_{D_t}x\wedge F\,dx+\int_{\Gamma_t}x\wedge\Pi\,dS.
+\end{equation}
+\end{postulat}
+
+\begin{teorema}
+La llei de conservaci\'{o} del moment angular implica que per tot $(x,t)\in\Delta$, $S(x,t)$ \'{e}s una aplicaci\'{o} lineal sim\`{e}trica.
+\end{teorema}
+
+Que l'aplicaci\'{o} $S(x,t)$ sigui sim\`{e}trica vol dir que \'{e}s autoadjunta: $S(x,t)=S(x,t)^{\dagger}$. Aix\`{o} es tradueix a que la seva matriu en qualsevol base ortonormal \'{e}s sim\`{e}trica. El fet que $S$ sigui sim\`{e}tric vol dir que \'{e}s diagonalitzable, \'{e}s a dir, existeix una base en la qual $S$ \'{e}s diagonal. Les direccions dels vectors d'aquesta base es diuen \textbf{direccions principals d'esfor\c{c}os}.
+
+\subsection{Deducci\'{o} de l'equaci\'{o} de Euler}
+
+En el model euleri\`{a}, un fluid ve totalment determinat per la velocitat $v$ i la densitat $\rho$. Sabent la velocitat $v$ es poden deduir totes les traject\`{o}ries resolent la EDO \eqref{Equ. trajectoria}. Aquestes variables $v$ i $\rho$ estan lligades per les seg\"{u}ents equacions diferencials, que hem dedu\"{i}t abans:
+\[\left\{\begin{array}{l}\displaystyle{\frac{\partial\rho}{\partial t}+\diver(\rho v)=0,}\\\displaystyle{\rho\left(\frac{\partial v}{\partial t}+v\cdot\nabla v\right)=F+\diver S}.\end{array}\right.\]
+
+La primera equaci\'{o} \'{e}s l'equaci\'{o} de continu\"{i}tat ---dedu\"{i}da del postulat \ref{Pos: conservacio massa} de conservaci\'{o} de la massa a trav\'{e}s de la proposici\'{o} \ref{Pro: conservacio massa final}--- i la segona \'{e}s l'equaci\'{o} de la conservaci\'{o} de la quantitat de moviment, dedu\"{i}da en la proposici\'{o} \ref{Pro: conservacio moment} a partir del postulat \ref{Pos: quantitat moviment}. Tenim 4 equacions escalars: una \'{e}s la primera i les altres tres s\'{o}n les tres components de la segona. Tenim les tres inc\`{o}gnites de $v$ i la inc\`{o}gnita $\rho$. Per\`{o} a priori $S$ tamb\'{e} \'{e}s desconegut, el qual causa que tinguem m\'{e}s inc\`{o}gnites que equacions.
+
+Per resoldre aquest problema, farem algunes suposicions sobre el fluid, que ens reduiran la difer\`{e}ncia entre el nombre d'equacions i d'inc\`{o}gnites.
+
+\begin{definicio}
+Es diu que un fluid \'{e}s \textbf{perfecte} quan existeix una aplicaci\'{o} $p:\Delta\rightarrow\mathbb{R}$ tal que $S(x,t)=-p(x,t)I$, on $I:\mathbb{R}^3\rightarrow\mathbb{R}^3$ \'{e}s la identitat.
+
+Aquesta funci\'{o} $p$ s'anomena \textbf{pressi\'{o}} interna del fluid.
+\end{definicio}
+
+Que un fluid sigui perfecte vol dir que els esfor\c{c}os tallants s\'{o}n nuls: nom\'{e}s hi ha esfor\c{c}os normals i s\'{o}n tots iguals. Aix\`{o} vol dir que una capa del fluid nom\'{e}s pot exercir sobre una capa contigua una for\c{c}a perpendicular a les dues capes. No hi ha cap component tangencial.
+
+Calculem $\diver S$ per un fluid perfecte. Observem que $S_j(x,t)=S(x,t)(e_j)=-p(x,t)I(e_j)=-p(x,t)e_j$.
+
+\[\diver S(x,t)=\sum_{j=1}^3\frac{\partial S_j}{\partial x_j}(x,t)=-\sum_{j=1}^3\frac{\partial p}{\partial x_j}(x,t)e_j=-\nabla p(x,t)\]
+
+Si un fluid \'{e}s perfecte, llavors la diverg\`{e}ncia del tensor d'esfor\c{c}os \'{e}s simplement menys el gradient de la pressi\'{o} i per tant l'equaci\'{o} \ref{Equ. conservacio moment} queda redu\"{i}da a
+\begin{equation}\label{Equ. Euler perfecte}
+\rho\left(\frac{\partial v}{\partial t}+v\cdot\nabla v\right)=-\nabla p+F.
+\end{equation}
+
+Aquesta \'{e}s l'equaci\'{o} d'Euler. Hem redu\"{i}t en gran quantitat el nombre d'inc\`{o}gnites en eliminar $S$, per\`{o} encara ens en queden 5, una m\'{e}s que equacions, ja que no coneixem la pressi\'{o} $p$. Imposarem per aix\`{o} condicions m\'{e}s fortes sobre els fluids per tal d'obtenir una nova equaci\'{o}.
+
+Suposarem que el fluid \'{e}s incompressible. Recordem que aquesta hip\`{o}tesi es pot traduir a que $\diver v=0$, amb el qual tenim l'equaci\'{o} que necessit\`{a}vem.
+
+Quan el fluid \'{e}s incompressible, s'acostuma a suposar tamb\'{e} que \'{e}s homogeni, \'{e}s a dir, que $\nabla\rho=0$. En aquest cas, $\rho$ no varia ni en el temps ni en l'espai, pel qual podem considerar que val $1$. Els fluids perfectes, incompressibles i homogenis s'anomenen \textbf{ideals}, pels quals l'equaci\'{o} d'Euler queda:
+\begin{equation}\label{Equ. Euler}
+\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\nabla p+F,}\\\diver v=0.\end{array}\right.
+\end{equation}
+
+Per tal d'acabar de determinar la soluci\'{o} de l'equaci\'{o} d'Euler cal donar les condicions inicials i de contorn. Com a condicions inicials s'han de fixar els valors de $\rho$ i $v$ a temps $t=0$ sobre tot $\Omega_0$. Com a condici\'{o} de contorn, s'ha de dir, per cada $t$, quant val la component de $v$ perpendicular a la vora del domini: $\langle v,n\rangle=g(x)$ sobre $S=\partial\Omega_t$. Per\`{o} aquesta $g$ no pot ser una funci\'{o} qualsevol, ja que per tal que es compleixi la condici\'{o} d'incompressibilitat, \'{e}s necessari que
+\[\int_Sg(x)dS=\int_S\langle v,n\rangle dS=\int_{\Omega_t}\diver v\,dx=0.\]
+
+Que aquesta integral sigui 0 vol dir que ha d'entrar tant fluid com surt del domini. Una condici\'{o} de contorn molt com\'{u} \'{e}s $g(x)=0$, que correspon al cas que no entra ni surt fluid per les parets del domini, pel qual es diu que les parets s\'{o}n \textbf{impermeables}.
+
+\subsection{Vorticitat i fluxos irrotacionals}\label{Sse: vorticitat}
+
+\begin{definicio}
+Diem que un fluid \'{e}s \textbf{estacionari} quan les seves variables eulerianes no varien amb el temps, \'{e}s a dir, quan per tot $t\in I$, $\Omega_t=\Omega_0$ i per tot $x\in\Omega_t$ $\rho(x,t)=\rho(x,0)$, $v(x,t)=v(x,0)$ i $p(x,t)=p(x,0)$.
+\end{definicio}
+
+El cas d'un fluid estacionari \'{e}s molt m\'{e}s f\`{a}cil d'estudiar, ja que les derivades parcials respecte el temps es fan 0.
+
+\begin{definicio}
+Definim la \textbf{vorticitat} $\omega$ com el rotacional de la velocitat $v$.
+
+\begin{equation}
+\omega=\rot v
+\end{equation}
+\end{definicio}
+
+Aquesta nova magnitud ens indica quant gira el fluid al voltant de cada punt o com d'arremolinat est\`{a} el fluid. Per entendre millor com actua la vorticitat, podem descompondre el gradient de velocitats en una part sim\`{e}trica i una part antisim\`{e}trica.
+
+\begin{definicio}
+Definim la \textbf{part sim\`{e}trica} $D$ i la \textbf{part antisim\`{e}trica} $A$ de $dv$ com:
+\begin{equation}
+D=\frac{1}{2}(dv+dv^{\dagger}),\hspace{5mm}A=\frac{1}{2}(dv-dv^{\dagger}),
+\end{equation}
+on $dv^{\dagger}$ fa refer\`{e}ncia a l'adjunt de $dv$, \'{e}s a dir, a aquella aplicaci\'{o} lineal que, en una base ortonormal, t\'{e} com a matriu, la matriu transposada de $dv$. $D$ \'{e}s una aplicaci\'{o} lineal sim\`{e}trica o autoadjunta: $D=D^{\dagger}$ i $A$ \'{e}s antisim\`{e}trica o antiautoadjunta: $A=-A^{\dagger}$.
+\end{definicio}
+
+Si calculem la matriu de $A$ en la base can\`{o}nica de $\mathbb{R}^3$, obtenim la seg\"{u}ent matriu:
+\begin{equation}
+\frac{1}{2}\left(\begin{matrix}0&-\omega_3&\omega_2\\\omega_3&0&-\omega_1\\-\omega_2&\omega_1&0\end{matrix}\right).
+\end{equation}
+
+Per tant, per qualsevol vector $h\in\mathbb{R}^3$, $A(h)=\frac{1}{2}\omega\wedge h$, que dona la relaci\'{o} entre la part antisim\`{e}trica del gradient de la velocitat i la vorticitat.
+
+Per estudiar com interv\'{e} cadascuna d'aquestes parts en l'evoluci\'{o} del fluid, suposem primer un fluid estacionari amb $dv$ que t\'{e} nom\'{e}s part antisim\`{e}trica. Llavors $dv=A$ i $v=A(x)$ i
+\begin{equation}
+\frac{dx}{dt}=v=A(x)=\frac{1}{2}\,\omega\wedge x.
+\end{equation}
+
+Per tant en aquest cas, la part antisim\`{e}trica est\`{a} fent que el fluid giri al voltant de l'eix de direcci\'{o} $\omega$ amb una velocitat angular $\frac{1}{2}|\omega|$, on $|\omega|$ fa refer\`{e}ncia a la norma euclidiana del vector $\omega$. Com que \'{e}s una rotaci\'{o}, \'{e}s un moviment r\'{i}gid, que no comporta cap canvi de volum ni deformaci\'{o}.
+
+Ara vegem com es comporta el fluid sota l'acci\'{o} d'un $dv$ sim\`{e}tric. En aquest cas tindrem $dv=D$.
+
+\begin{equation}
+\frac{dx}{dt}=D(x)
+\end{equation}
+
+Com que $D$ \'{e}s sim\`{e}tric, pel teorema espectral, existeix una base ortonormal $(e_1,e_2,e_3)$ en qu\`{e} la seva matriu \'{e}s diagonal. Si $d_i$ \'{e}s el valor propi de $e_i$, que \'{e}s un vector propi, llavors el flux resulta en una dilataci\'{o} de factor $e^{d_it}$ al llarg de l'eix $e_i$, provocant un augment del volum total.
+
+Per tant, si expandim $v$ per un polinomi de Taylor d'ordre 1 al voltant de $x_0$ i posem $h=x-x_0$, obtenim $v(x)=v(x_0)+dv_{x_0}(h)+O(|h|^2)=v(x_0)+D_{x_0}(h)+A_{x_0}(h)+O(|h|^2)=v(x_0)+D_{x_0}(h)+\frac{1}{2}\,\omega(x_0)\wedge h+O(|h|^2)$, sent $D_{x_0}$ i $A_{x_0}$ les parts sim\`{e}trica i antisim\`{e}trica de $dv_{x_0}$. Per tant per petits increments de $x$, el flux pot ser aproximat per una translaci\'{o} produ\"{i}da per $v(x_0)$, una deformaci\'{o} causada per $D$ i una rotaci\'{o} originada per la vorticitat, amb la seva direcci\'{o} com eix de gir.
+
+\begin{lema}\label{Lem: analisi vectorial}
+Donat camps $x,y:\Omega\rightarrow\mathbb{R}^3$ de classe $C^1$, es tenen les seg\"{u}ents igualtats:
+\begin{equation}\label{Equ. analisi vectorial I}
+x\cdot\nabla x=(\rot x)\wedge x+\nabla\frac{|x|^2}{2},
+\end{equation}
+\begin{equation}\label{Equ. analisi vectorial II}
+\rot(x\wedge y)=y\cdot\nabla x-x\cdot\nabla y+x\diver y-y\diver x.
+\end{equation}
+\end{lema}
+
+\begin{teorema}\label{Teo: Helmholtz}
+(Helmholtz, 1858) En un fluid ideal, la vorticitat evoluciona segons:
+\begin{equation}
+\frac{d\omega}{dt}=\frac{\partial\omega}{\partial t}+v\cdot\nabla\omega=\omega\cdot\nabla v+\rot\frac{F}{\rho}.
+\end{equation}
+\end{teorema}
+\begin{proof}
+Partim de l'equaci\'{o} d'Euler.
+
+\[\frac{\partial v}{\partial t}+v\cdot\nabla v=-\frac{1}{\rho}\nabla p+\frac{1}{\rho}F\]
+
+Apliquem la identitat \eqref{Equ. analisi vectorial I} del lema \ref{Lem: analisi vectorial} al camp $v$. Recordem que $\rho$ \'{e}s constant per ser ideal el fluid.
+
+\[\frac{\partial v}{\partial t}+\omega\wedge v-\frac{1}{\rho}F=-\nabla\left(\frac{1}{\rho}p+\frac{1}{2}||v||^2\right)\]
+
+Ara prenem rotacionals a tots dos costats de la igualtat.
+
+\[\rot\frac{\partial v}{\partial t}+\rot(\omega\wedge v)-\rot\frac{F}{\rho}=-\rot\nabla\left(\frac{1}{\rho}p+\frac{1}{2}||v||^2\right)\]
+
+Observem que el segon membre \'{e}s el rotacional d'un gradient i, per tant, ser\`{a} 0. Tenim en compte que
+\[\rot\frac{\partial v}{\partial t}=\frac{\partial\rot v}{\partial t}=\frac{\partial\omega}{\partial t}.\]
+
+Fem servir la identitat \eqref{Equ. analisi vectorial II} del lema \ref{Lem: analisi vectorial} per $\rot(\omega\wedge v)$. En la seva expressi\'{o} apareixen els termes $\diver v$, que \'{e}s nul per ser incompressible el fluid i $\diver\omega$, que tamb\'{e} \'{e}s nul per ser la diverg\`{e}ncia d'un rotacional. Aix\'{i} doncs, ens queda l'expressi\'{o} que vol\'{i}em:
+\[\frac{\partial\omega}{\partial t}+v\cdot\nabla\omega=\omega\cdot\nabla v+\rot\frac{F}{\rho}.\]
+\end{proof}
+
+\begin{definicio}
+Diem que les forces externes s\'{o}n \textbf{conservatives} quan deriven d'un \textbf{potencial} $U:\Delta\rightarrow\mathbb{R}$.
+
+\begin{equation}
+F=-\rho\nabla U
+\end{equation}
+\end{definicio}
+
+L'exemple m\'{e}s t\'{i}pic de camp de forces conservatiu \'{e}s el camp gravitatori, pel qual $F=-\rho g e_3$, on $(e_1,e_2,e_3)$ \'{e}s la base can\`{o}nica de $\mathbb{R}^3$. El potencial d'aquest camp de forces \'{e}s $U=gz$.
+
+\begin{corollari}\label{Cor: vorticitat 2D}
+Si tenim un fluid ideal bidimensional en un camp de forces conservatiu, la vorticitat es conserva al llarg de les traject\`{o}ries.
+
+\[\frac{d\omega}{dt}=0\]
+\end{corollari}
+\begin{proof}
+Comencem tenint
+\[\rot\frac{F}{\rho}=-\rot\nabla U=0.\]
+
+Si $v=(v_1,v_2,0)$, llavors la vorticitat ser\`{a}
+\[\omega=\left(0,0,\frac{\partial v_2}{\partial x_1}-\frac{\partial v_1}{\partial x_2}\right)=(0,0,\omega_3).\]
+
+La tercera columna de la matriu de $\nabla v$ ser\`{a} de zeros, donant lloc a que $\omega\cdot\nabla v=0$.
+
+\[\frac{d\omega}{dt}=\omega\cdot\nabla v+\rot\frac{F}{\rho}=0\]
+\end{proof}
+
+\'{E}s molt important tenir present que aquest resultat de dalt nom\'{e}s \'{e}s v\`{a}lid en dues dimensions.
+
+\begin{definicio}\label{Def: pressio no hidrostatica}
+En el cas dels fluids perfectes homogenis amb for\c{c}a exterior conservativa, definim la \textbf{pressi\'{o} no hidrost\`{a}tica} com
+\begin{equation}
+\pi=p+\rho\,U.
+\end{equation}
+\end{definicio}
+
+Observem que en aquest tipus de fluids, el terme de les forces externes desapareix a l'equaci\'{o} d'Euler \ref{Equ. Euler perfecte}, ja que $-\nabla p+F=-\nabla\pi$.
+
+\begin{definicio}
+Un flux es diu \textbf{irrotacional} quan $\omega=\rot v=0$.
+\end{definicio}
+
+Per un fluid irrotacional l'equaci\'{o} d'Euler queda:
+\[\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\frac{1}{\rho}\nabla p+\frac{1}{\rho}F,}\\\diver v=0,\\\rot v=0.\end{array}\right.\]
+
+Aparentment hom pensaria que el sistema t\'{e} massa equacions, ja que l'equaci\'{o} d'Euler ja t\'{e} tantes equacions com inc\`{o}gnites, per\`{o} ara estem afegint una equaci\'{o} m\'{e}s, el que podria fer que el sistema no fos compatible. Pel corol\textperiodcentered lari \ref{Cor: vorticitat 2D}, si posem com a condici\'{o} inicial un $v(x,0)$ tal que $\omega(x,0)=0$, llavors la derivada material de $\omega$ ser\`{a} $0$ i $\omega$ ser\`{a} constantment igual a $0$, donant lloc a un flux irrotacional. Amb aix\`{o}, el ser un flux irrotacional queda determinat per les condicions inicials i l'equaci\'{o} $\rot v=0$ es pot treure del sistema d'equacions.
+
+\begin{definicio}
+Un fluid es diu \textbf{flux potencial} quan existeix una funci\'{o} $\Phi:\Omega\rightarrow\mathbb{R}$, que s'anomena \textbf{potencial}, tal que $\nabla\Phi=v$.
+\end{definicio}
+
+S'ha de tenir em compte el conveni de signes. En din\`{a}mica de forces, el potencial se sol canviar de signe, per\`{o} aqu\'{i} fem servir el conveni de signe positiu: $\nabla\Phi=v$.
+
+\begin{lema}
+Tot flux irrotacional definit sobre un domini $\Omega$ simplement connex \'{e}s potencial.
+
+Rec\'{i}procament, tot flux potencial \'{e}s irrotacional.
+\end{lema}
+
+En els fluxos potencials, la condici\'{o} d'incompressibilitat $\diver v=0$ es transforma en:
+\begin{equation}
+\Delta\Phi=0.
+\end{equation}
+
+Per tant hem transformat el problema de resoldre les equacions d'Euler en el problema de Laplace. Aquest problema s'ha estudiat molt i \'{e}s un problema cl\`{a}ssic de les matem\`{a}tiques. Per determinar la soluci\'{o} d'aquesta equaci\'{o} diferencial, com a l'equaci\'{o} d'Euler, s'ha de donar una condici\'{o} de contorn sobre la vora $\partial\Omega$:
+\begin{equation}
+\frac{\partial\Phi}{\partial n}=\langle v,n\rangle,
+\end{equation}
+essent $\langle v,n\rangle$ conegut.
+
+\subsection{Deducci\'{o} de l'equaci\'{o} de Navier-Stokes}
+
+Abans supos\`{a}vem que el fluid era ideal, \'{e}s a dir, perfecte, incompressible i homogeni. L'estudi d'aquests fluids \'{e}s molt interessant des del punt de vista matem\`{a}tic i es pot aplicar a alguns fluids del m\'{o}n f\'{i}sic. No obstant aix\`{o}, no \'{e}s un model molt realista, ja que estem suposant que les capes del fluid nom\'{e}s exerceixen forces perpendiculars sobre capes adjacents. En els fluids reals, aquestes forces s\'{i} que tenen una component tangencial, que es diu viscositat.
+
+Farem algunes suposicions sobre aquestes forces tangencials que seran menys fortes que suposar que no hi s\'{o}n ---com als fluids perfectes--- i per tant tindran validesa per la major part dels fluids.
+
+\begin{postulat}
+(Postulat d'Stokes) El tensor d'esfor\c{c}os $S$ \'{e}s funci\'{o} de $dv$.
+\end{postulat}
+
+\begin{postulat}
+(Postulat de linealitat) El tensor d'esfor\c{c}os $S$ \'{e}s lineal o, m\'{e}s precisament, af\'{i}, respecte $dv$. En particular, existeix una aplicaci\'{o} $\tau:\Delta\rightarrow\mathcal{L}\big(\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3),\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)\big)$ tal que
+\begin{equation}
+S(x,t)(n)=-p(x,t)\,n+\tau(x,t)(dv_{(x,t)})(n).
+\end{equation}
+\end{postulat}
+
+Els fluids que obeeixen aquests dos postulats s'anomenen fluids \textbf{newtonians}. Observem que $\tau(x,t)$ \'{e}s una aplicaci\'{o} lineal que es pot representar com una matriu amb $3^4=81$ components. El fet que $S(x,t)$ sigui sim\`{e}tric redueix aquest nombre a $54$, per\`{o} encara s\'{o}n massa coeficients a determinar. Per aix\`{o} farem una altra hip\`{o}tesi: requerirem que el medi sigui is\`{o}trop i homogeni.
+
+Que el medi sigui homogeni voldr\`{a} dir que $\tau$ no dependr\`{a} del punt $(x,t)$, sin\'{o} nom\'{e}s de $dv$ i de $n$. Que sigui is\`{o}trop voldr\`{a} dir que $\tau$ ser\`{a} invariant per transformacions ortogonals, \'{e}s a dir, elements de $\Or(3)$. Una aplicaci\'{o} $g\in \Or(3)=\{g:\mathbb{R}^3\rightarrow\mathbb{R}^3\,|\,g\text{ \'{e}s isomorfisme},||g(x)||=||x||\text{ per tot }x\in\mathbb{R}^3\}$ transforma una certa aplicaci\'{o} lineal $f\in\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$ mitjan\c{c}ant la conjugaci\'{o} $g\circ f\circ g^{-1}$. De fet, $g$ es pot interpretar com un canvi de coordenades que transforma una base ortonormal en una altra base ortonormal.
+
+\begin{postulat}\label{Pos: isotrop homogeni}
+L'aplicaci\'{o} $\tau$ \'{e}s independent del punt $(x,t)$, aix\'{i} que a partir d'ara escriurem $\tau:\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)\rightarrow\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$. A m\'{e}s exigirem que per tot $f\in\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$ i tot $g\in\Or(3)$ $\tau(g\circ f\circ g^{-1})=g\circ\tau(f)\circ g^{-1}$.
+\end{postulat}
+
+El seg\"{u}ent teorema ens garantir\`{a} que, sota aquesta nova hip\`{o}tesi, l'aplicaci\'{o} lineal $\tau$ quedar\`{a} totalment determinada \'{u}nicament per dos coeficients.
+
+\begin{teorema}
+Per un fluid newtoni\`{a} que compleix el postulat \ref{Pos: isotrop homogeni} existeixen dos coeficients $\lambda,\mu\in\mathbb{R}$ tals que
+\[\tau(dv)=\lambda(\diver v)I+2\mu D,\]
+on $D$ \'{e}s la part sim\`{e}trica de $dv$.
+\end{teorema}
+
+Els coeficients $\lambda$ i $\mu$ s'anomenen \textbf{primer i segon coeficients de viscositat}. Amb aquest teorema, es pot expressar
+\begin{equation}\label{Equ. esforcos Navier-Stokes}
+S=-pI+\lambda(\diver v)I+2\mu D.
+\end{equation}
+
+L'estudi dels fluids viscosos el va desenvolupar l'enginyer i matem\`{a}tic Navier al 1822 i el va concloure Stokes al 1845. En el seu honor es van posar nom a les seg\"{u}ents equacions, que es dedueixen de la llei de conservaci\'{o} de la quantitat de moviment \eqref{Equ. conservacio moment} substituint $S$ per \eqref{Equ. esforcos Navier-Stokes}:
+\begin{equation}
+\rho\frac{dv_i}{dt}=-\frac{\partial p}{\partial x_i}+\sum_{k=1}^3\frac{\partial}{\partial x_k}\left(\mu\left(\frac{\partial v_i}{\partial x_k}+\frac{\partial v_k}{\partial x_i}\right)\right)+\frac{\partial}{\partial x_i}\left(\lambda\sum_{k=1}^3\frac{\partial v_k}{\partial x_k}\right)+F_i
+\end{equation}
+per $i=1,2,3$. Aquestes s\'{o}n les celeb\`{e}rrimes equacions de Navier-Stokes. De totes maneres, normalment es pot suposar que els coeficients $\lambda$ i $\mu$ s\'{o}n constants. Tot i que normalment depenen de la temperatura i de la densitat, \'{e}s prou general considerar-los constants, amb el qual se simplifiquen molt les equacions i queden en la forma a qu\`{e} estem acostumats:
+\begin{equation}
+\rho\frac{dv}{dt}=-\nabla p+\mu\Delta v+(\lambda+\mu)\nabla(\diver v)+F,
+\end{equation}
+on $\Delta v$ \'{e}s el laplaci\`{a} de $v$. En el cas particular en qu\`{e} $\lambda=\mu=0$, el fluid \'{e}s \textbf{no visc\'{o}s} o tamb\'{e} dit \textbf{inv\'{i}scid}, i es recupera l'equaci\'{o} d'Euler.
+
+Com en el cas dels fluids no viscosos, tamb\'{e} estudiarem el cas particular dels fluids incompressibles, que s\'{o}n aquells pels quals $\diver v=0$. Escrivim $\nu=\frac{\mu}{\rho}$ i a aquest coeficient li diem \textbf{coeficient de viscositat cinem\`{a}tic}, en oposici\'{o} al \textbf{coeficient de viscositat din\`{a}mic} $\mu$. El coeficient $\nu$ \'{e}s intr\'{i}nsec al material del que est\`{a} compost el fluid i per tant \'{e}s conegut. Per aquests fluids se simplifica encara m\'{e}s l'equaci\'{o} de Navier-Stokes:
+\begin{equation}\label{Equ. Navier-Stokes}
+\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\frac{1}{\rho}\nabla p+\nu\Delta v+\frac{1}{\rho}F,}\\\diver v=0.\end{array}\right.
+\end{equation}
+
+S'acostuma a suposar, com en el cas de l'equaci\'{o} d'Euler, que el fluid \'{e}s inicialment homogeni: $\nabla\rho(x,0)=0$. Per la proposici\'{o} \ref{Pro: homogeni inicial}, aquesta suposici\'{o} i el fet que el fluid sigui incompressible impliquen que el fluid \'{e}s homogeni per tot temps. En total, $\rho$ \'{e}s constant tant en el temps com en l'espai, i s'acostuma a considerar $\rho=1$. Per determinar la soluci\'{o} d'aquesta equaci\'{o}, com en el cas de l'equaci\'{o} d'Euler, s'han de donar unes condicions inicials per $\rho,v$ a $t=0$ i les condicions de contorn, que \'{e}s el valor de $v$ sobre la frontera $\partial\Omega_t$ per cada $t$. Normalment es pren la condici\'{o} de \textbf{no lliscament}, \'{e}s a dir, que $v=0$ sobre la frontera.
+\vspace{3mm}
+
+Per finalitzar aquesta secci\'{o}, donem l'equaci\'{o} diferencial que regeix l'evoluci\'{o} de la vorticitat dels fluids viscosos, que \'{e}s l'an\`{a}loga a aquella donada pel teorema de Helmholtz (teorema \ref{Teo: Helmholtz}).
+
+\begin{equation}\label{Equ. Helmholtz viscos}
+\frac{d\omega}{dt}=\frac{\partial\omega}{\partial t}+v\cdot\nabla\omega=\omega\cdot\nabla v+\nu\Delta\,\omega+\rot\frac{F}{\rho}
+\end{equation}
+
+Observem que \'{e}s la mateixa equaci\'{o} que en el cas no visc\'{o}s, per\`{o} amb un terme $\nu\Delta\,\omega$.
+
+\subsection{Exemples de fluxos bidimensionals}
+
+Estudiem una mica resolucions concretes de les equacions d'Euler i de Navier-Stokes sota condicions espec\'{i}fiques.
+
+Comencem amb un flux incompressible ($\diver v=0$) i irrotacional ($\omega=0$) sobre un domini $\Omega\subseteq\mathbb{R}^2$ simplement connex. Com hem vist a la secci\'{o} \ref{Sse: vorticitat}, per ser irrotacional, existeix un potencial $\Phi:\Omega\rightarrow\mathbb{R}$ tal que $v=\nabla\Phi$ i per ser incompressible, $\Delta\Phi=0$. D'aqu\'{i} es dedueix que $\Phi$ \'{e}s una funci\'{o} harm\`{o}nica. Un fet b\`{a}sic de l'an\`{a}lisi complexa indica que existeix una altra funci\'{o} $\Psi:\Omega\rightarrow\mathbb{R}$ tal que $F=\Phi+i\Psi$ \'{e}s una funci\'{o} holomorfa. Identifiquem $\mathbb{R}^2$ amb $\mathbb{C}$. La funci\'{o} $\Psi$ tamb\'{e} \'{e}s harm\`{o}nica: $\Delta\Psi=0$.
+
+Per les relacions de Cauchy-Riemann, $\Psi_x=-\Phi_y$ i $\Psi_y=\Phi_x$. Si escrivim $v=(p,q)$, $v=\nabla\Phi$ significa que $\Phi_x=p$ i $\Phi_y=q$. Per tant,
+\[\nabla\Psi=(\Psi_x,\Psi_y)=(-q,p).\]
+
+Observem que n'hi ha prou amb que el fluid sigui incompressible ---\'{e}s a dir, no cal que sigui irrotacional--- per poder definir $\Psi$, ja que $\rot(-q,p)=p_x+q_y=\diver v=0$ i per tant existir\`{a} sempre una $\Psi$ tal que $\nabla\Psi=(-q,p)$.
+
+\begin{definicio}
+Sigui $v=(p,q)$ la velocitat d'un fluid bidimensional incompressible definit sobre un domini simplement connex. Llavors anomenem \textbf{funci\'{o} de corrent} l'aplicaci\'{o} $\Psi$ tal que $\nabla\Psi=(-q,p)$.
+
+Si, a m\'{e}s, el fluid \'{e}s incompressible, la funci\'{o} holomorfa $F$ amb part imagin\`{a}ria $\Psi$ l'anomenem \textbf{potencial complex}.
+\end{definicio}
+
+\begin{teorema}
+La funci\'{o} de corrent $\Psi$ d'un fluid bidimensional incompressible estacionari definit sobre un domini simplement connex \'{e}s constant al llarg de les traject\`{o}ries.
+
+\[\frac{d\Psi}{dt}=0\]
+\end{teorema}
+\begin{proof}
+Per ser el fluid estacionari, $\frac{\partial\Psi}{\partial t}=0$. Per tant,
+\[\frac{d\Psi}{dt}=\frac{\partial\Psi}{\partial t}+\langle v,\nabla\Psi\rangle=\langle(p,q),(-q,p)\rangle=0\]
+\end{proof}
+
+Gr\`{a}cies a aquest teorema, les traject\`{o}ries del flux estan contingudes a les corbes de nivell $\Psi=\lambda$ per cada $\lambda$ constant.
+
+Tornant als fluids irrotacionals, ja que $F$ \'{e}s una funci\'{o} holomorfa, calculem la seva derivada
+\[F'=F_x=\Phi_x+i\Psi_x=p-iq=\overline v,\]
+on interpretem la velocitat $v=p+iq$ com una funci\'{o} complexa.
+
+Fixem-nos que la derivada de $F$ \'{e}s el conjugat de la velocitat, no la velocitat en si mateixa. De fet, $v$ no \'{e}s una funci\'{o} holomorfa, sin\'{o} que \'{e}s el seu conjugat el que \'{e}s holomorf.
+
+\begin{teorema}
+Si $\Omega\subseteq\mathbb{C}$ \'{e}s un obert simplement connex, aleshores una funci\'{o} $v:\Omega\rightarrow\mathbb{C}$ \'{e}s la velocitat d'un cert fluid ideal, irrotacional i estacionari si i nom\'{e}s si existeix una funci\'{o} $F:\Omega\rightarrow\mathbb{C}$ holomorfa tal que
+\[F'(z)=\overline{v(z)}.\]
+
+En cas que $\Omega$ sigui m\'{u}liplement connex, el potencial $F$ ser\`{a} multiavaluat.
+\end{teorema}
+
+Aquest teorema \'{e}s molt \'{u}til per obtenir exemples de solucions irrotacionals i estacion\`{a}ries de l'equaci\'{o} d'Euler \eqref{Equ. Euler} Vegem-ne un.
+
+Considerem $F(z)=-i\log z$. $F$ \'{e}s un potencial multiavaluat sobre $\mathbb{C}\backslash\{0\}$ i t\'{e} una singularitat al $0$. Calculem la velocitat i obtenim
+\begin{equation}\label{Equ. vortex elemental}
+v(z)=\overline{F'(z)}=\frac{i}{\overline z}=\frac{1}{x^2+y^2}(-y,x)=\frac{1}{r}e_{\theta},
+\end{equation}
+on $e_{\theta}=(-\sin\theta,\cos\theta)$. Veiem que la velocitat t\'{e} sempre direcci\'{o} radial i norma $\frac{1}{r}$. El que fan les traject\`{o}ries \'{e}s fer voltes circulars en sentit antihorari al voltant de l'origen. Per aix\`{o} anomenem aquest flux \textbf{terbol\'{i}} o \textbf{v\`{o}rtex elemental}. Aquest flux \'{e}s efectivament irrotacional, ja que si hom vol calcular la vorticitat, es troba que $\omega=\rot v=0$. Tot i aix\'{i}, la circulaci\'{o} de la velocitat al llarg de les circumfer\`{e}ncies de centre l'origen s\'{o}n diferents de $0$. Aix\`{o} \'{e}s degut a la singularitat que presenten $F$ i $v$ a l'origen, ja que $\mathbb{C}\backslash\{0\}$ no \'{e}s simplement connex.
+\vspace{3mm}
+
+En general, observem que $\omega=q_x-p_y=-\Delta\Psi$. D'aqu\'{i} es pot calcular la funci\'{o} de corrent d'un fluid estacionari a partir de $\omega$ mitjan\c{c}ant una convoluci\'{o}:
+\[\Psi=-\frac{1}{2\pi}\log\frac{1}{|x|}*\omega.\]
+
+D'aqu\'{i} ja es calcula la velocitat, que es pot expressar en termes de la vorticitat mitjan\c{c}ant f\'{o}rmula de Biot-Savart:
+\begin{equation}
+v=K_2*\omega,\text{ on }K_2(x,y)=\frac{1}{2\pi}\frac{1}{x^2+y^2}(-y,x).
+\end{equation}
+
+Observem que $K_2(x,y)$ \'{e}s la velocitat del v\`{o}rtex elemental amb un factor $2\pi$ dividint per normalitzar. De fet, fent un argument poc rigor\'{o}s, podem dir que que la vorticitat d'un v\`{o}rtex elemental \'{e}s $2\pi\delta$, on $\delta$ \'{e}s la distribuci\'{o} $\delta$ de Dirac. Llavors, en aquest cas, $v=K_2*\omega=2\pi K_2$.
+
+Amb el que acabem d'exposar, un cop coneguda la vorticitat, podem con\`{e}ixer la velocitat. Aix\'{i}, n'hi ha prou amb obtenir la vorticitat de l'equaci\'{o} \eqref{Equ. Helmholtz viscos}. Podem calcular per exemple una soluci\'{o} de la vorticitat quan la vorticitat inicial $\omega_0$ t\'{e} simetria radial. En aquest cas, si menyspreem les forces externes, tindrem la seg\"{u}ent equaci\'{o}:
+\[\omega_t=\nu\Delta\omega,\]
+que \'{e}s exactament l'equaci\'{o} de la calor. La seva soluci\'{o} \'{e}s ben coneguda:
+\begin{equation}\label{Equ. calor}
+\omega=H_t*\omega_0,\text{ on }H_t(x)=\frac{1}{4\pi\nu t}e^{-\frac{|x|^2}{4\nu t}}.
+\end{equation}
+
+La funci\'{o} $H_t$ es coneix amb el nom de nucli de la calor. Ara, si calculem la velocitat corresponent a aquesta vorticitat, podem obtenim
+\begin{equation}\label{Equ. Biot-Savart temporal}
+v(x)=2\pi K_2(x)\int_0^{|x|}s\omega(s,t)ds,
+\end{equation}
+on hem posat $\omega$ en funci\'{o} \'{u}nicament de la dist\`{a}ncia $s$ a l'origen, ja que t\'{e} simetria radial. Observem que \'{e}s un v\`{o}rtex com el v\`{o}rtex elemental descrit a l'equaci\'{o} \eqref{Equ. vortex elemental}, per\`{o} multiplicat per un coeficient que dep\`{e}n del radi $|x|$.
+
+\section{Conceptes matem\`{a}tics previs}
+
+Vegem alguns conceptes matem\`{a}tics previs que necessitarem posteriorment per la secci\'{o} seg\"{u}ent.
+
+\subsection{Miscel\textperiodcentered l\`{a}nia}\label{Sse: miscellania}
+
+Comencem aquesta secci\'{o} enunciant un teorema sobre aproximacions de la unitat. Si es vol una breu introducci\'{o} sobre les aproximacions de la unitat, aix\'{i} com la demostraci\'{o} del seg\"{u}ent teorema, es pot trobar a l'ap\`{e}ndix \ref{App: apendix}.
+
+\begin{teorema}\label{Teo: successio suavitzada}
+Siguin $f_{\epsilon},f:\mathbb{R}^n\rightarrow\mathbb{R}$ cont\'{i}nues i uniformement fitades tals que $f_{\epsilon}$ convergeix uniformement sobre compactes a $f$ quan $\epsilon\to0$. Sigui $\phi_{\epsilon}\in C_0^{\infty}(\mathbb{R}^n)$ aproximaci\'{o} de la unitat per a la qual existeix un $K\subseteq\mathbb{R}^n$ compacte tal que per tot $\epsilon>0$, $\supp\phi_{\epsilon}\subseteq K$. Llavors $f_{\epsilon}*\phi_{\epsilon}\xrightarrow[\epsilon\to0]{}f$ uniformement a $\mathbb{R}^n$.
+\end{teorema}
+
+L'aproximaci\'{o} de la unitat que farem servir per aquest treball ser\`{a} la seg\"{u}ent:
+\begin{equation}\label{Equ. aproximacio unitat}
+\phi_{\epsilon}(x)=\frac{1}{\epsilon^n}\rho\left(\frac{x}{\epsilon}\right),
+\end{equation}
+on $\rho\in C_0^{\infty}(\mathbb{R}^n)$ \'{e}s una certa funci\'{o} radial qualsevol. Aquesta dependr\`{a} nom\'{e}s de $|x|$. Designem $\mathcal{J}_{\epsilon}v=\phi_{\epsilon}*v$ la convoluci\'{o}.
+
+\begin{lema}\label{Lem: Gronwall}
+(Gr\"{o}nwall) Siguin $u,q:[0,t]\rightarrow\mathbb{R}$ cont\'{i}nues i sigui $c:[0,t]\rightarrow[0,+\infty)$ derivable. Suposem que
+\[q(t)\leq c(t)+\int_0^tu(s)q(s)ds.\]
+
+Llavors
+\[q(t)\leq c(0)\exp\int_0^tu(s)ds+\int_0^tc'(s)\left(\exp\int_s^tu(\tau)d\tau\right)ds.\]
+\end{lema}
+
+Del lema de Gr\"{o}nwall es pot deduir el seg\"{u}ent: siguin $u,q,c:[0,t]\rightarrow\mathbb{R}$ amb $u$ derivable, $q,c$ cont\'{i}nues i $c\geq0$. Suposem que
+\[q'(t)\leq c(t)+u(t)q(t).\]
+
+Llavors
+\begin{equation}\label{Equ. EDO lineal}
+q(t)\leq q(0)\exp\int_0^tu(s)ds+\int_0^tc(s)\left(\exp\int_s^tu(\tau)d\tau\right)ds.
+\end{equation}
+
+D'alguna manera el lema ens diu que resoldre la desigualtat $q'(t)\leq c(t)+u(t)q(t)$ \'{e}s equivalent a resoldre l'equaci\'{o} $ q'(t)=c(t)+u(t)q(t)$, ja que aquesta equaci\'{o} diferencial t\'{e} com a soluci\'{o} precisament la igualtat de \eqref{Equ. EDO lineal}.
+\vspace{3mm}
+
+Si $f$ \'{e}s una funci\'{o} escalar i $g$ una funci\'{o} vectorial, aleshores $\diver(fg)=\langle\nabla f,g\rangle+f\diver g$. D'aquesta igualtat es pot deduir una integraci\'{o} per parts per funcions vectorials.
+
+\begin{teorema}\label{Teo: integracio parts}
+(Integraci\'{o} per parts) Sigui $\Omega\subseteq\mathbb{R}^n$ obert fitat amb frontera llisa tal que $\partial\Omega=\partial\overline\Omega$. Sigui $n$ el vector normal a $\partial\Omega$ cap a fora. Siguin $f:\overline{\Omega}\rightarrow\mathbb{R}$ i $g:\overline{\Omega}\rightarrow\mathbb{R}^n$ de classe $C^1$. Aleshores
+\begin{equation}
+\int_{\Omega}f\diver g\,dV=\int_{\partial\Omega}f\langle g,n\rangle dS-\int_{\Omega}\langle\nabla f,g\rangle dV.
+\end{equation}
+\end{teorema}
+\vspace{3mm}
+
+Vegem ara uns teoremes que ens permetran obtenir exist\`{e}ncia de solucions d'equacions diferencials.
+
+\begin{teorema}\label{Teo: Picard}
+(Picard) Sigui $U\subseteq B$ un obert d'un espai de Banach $B$ i sigui $f:U\rightarrow B$ una aplicaci\'{o} localment Lipschitz. Aix\`{o} vol dir que tot $x\in U$ t\'{e} un entorn $V\subseteq U$ i una constant $\lambda>0$ tal que per tot $y,z\in V$, $||f(y)-f(z)||_B\leq\lambda||y-z||_B$.
+
+Aleshores per tot $x_0\in U$ existeix un $T>0$ tal que la seg\"{u}ent EDO
+\[\left\{\begin{array}{l}\displaystyle{\frac{dx}{dt}=f(x),}\\x|_{t=0}=x_0,\end{array}\right.\]
+t\'{e} una soluci\'{o} $\varphi:(-T,T)\rightarrow U$ de classe $C^1$ i \'{e}s \'{u}nica.
+\end{teorema}
+
+Aquesta \'{e}s una versi\'{o} del teorema de Picard aplicat a espais de Banach, que \'{e}s m\'{e}s general. La seva demostraci\'{o}, com en el cas de $\mathbb{R}^n$, es basa en el teorema del punt fix, com s'explica a l'ap\`{e}ndix \ref{App: apendix}.
+
+Enunciem un teorema que ens permetr\`{a} perllongar les solucions de les EDOs. El teorema de Picard ens d\'{o}na exist\`{e}ncia de soluci\'{o} i aquest teorema ens donar\`{a} la possibilitat de perllongar aquesta soluci\'{o} per tot $t$.
+
+\begin{definicio}
+Sigui $U\subseteq B$ un obert d'un espai de Banach $B$ i sigui $\varphi:(-T,T)\rightarrow U$. Es diu que $\varphi$ \textbf{tendeix a la vora} de $U$ quan $t\to T$ si i nom\'{e}s si per tot compacte $K\subseteq U$ existeix un $t_0\in(-T,T)$ tal que per tot $t\in[t_0,T)$, $\varphi(t)\notin K$.
+\end{definicio}
+
+\begin{teorema}\label{Teo: Wintner}
+Sigui $U\subseteq B$ un obert d'un espai de Banach $B$ i sigui $f:U\rightarrow B$ una funci\'{o} localment Lipschitz. Aleshores l'\'{u}nica soluci\'{o} $\varphi:(-T,T)\rightarrow U$ de classe $C^1$ a la EDO
+\[\left\{\begin{array}{l}\displaystyle{\frac{dx}{dt}=f(x),}\\x|_{t=0}=x_0,\end{array}\right.\]
+o b\'{e} existeix per tot $t$ o b\'{e} tendeix a la vora de $U$ quan $t\to T$.
+\end{teorema}
+
+Aquest teorema es pot veure de fet com un corol\textperiodcentered lari del lema de Wintner.
+\vspace{3mm}
+
+Vegem ara diferents nocions de converg\`{e}ncia.
+
+\begin{definicio}
+Sigui $X$ un espai vectorial normat. Aleshores la \textbf{topologia feble} sobre $X$ \'{e}s la topologia menys fina amb la qual tota $f\in X'$ \'{e}s cont\'{i}nua. $X'$ fa refer\`{e}ncia al dual topol\`{o}gic, \'{e}s a dir, el conjunt de les $f:X\rightarrow\mathbb{C}$ lineals i cont\'{i}nues amb la topologia indu\"{i}da per la norma de $X$.
+\end{definicio}
+
+Es dedueix de la seva definici\'{o} que la topologia feble \'{e}s menys fina que la topologia donada per la norma.
+
+\begin{definicio}
+Sigui $u_{\epsilon}\in B$ una fam\'{i}lia d'elements d'un espai de Banach $B$ i sigui $u\in B$.
+\begin{enumerate}
+\item Diem que $u_{\epsilon}$ \textbf{convergeix fortament} a $u$ quan ho fa amb la topologia indu\"{i}da per la norma. Ho denotem $u_{\epsilon}\rightarrow u$.
+\item Diem que $u_{\epsilon}$ \textbf{convergeix feblement} a $u$ quan ho fa amb la topologia feble. Ho denotem $u_{\epsilon}\rightharpoonup u$.
+\end{enumerate}
+\end{definicio}
+
+Degut a que la topologia feble \'{e}s menys fina que la topologia donada per la norma, la converg\`{e}ncia forta sempre implicar\`{a} converg\`{e}ncia feble.
+
+\begin{proposicio}
+Sigui $u_{\epsilon}\in B$ una fam\'{i}lia d'elements per $\epsilon>0$ d'un espai de Banach $B$ i sigui $u\in B$. Aleshores:
+\begin{enumerate}
+\item $u_{\epsilon}$ convergeix fortament a $u$ si i nom\'{e}s si $||u_{\epsilon}-u||_B\xrightarrow[\epsilon\to0]{}0$,
+\item $u_{\epsilon}$ convergeix feblement a $u$ si i nom\'{e}s si per tot $f\in X'$, $f(u_{\epsilon})\xrightarrow[\epsilon\to0]{}f(u)$.
+\end{enumerate}
+
+En particular, pel teorema de representaci\'{o} de Riesz, si $u_{\epsilon}\in H$ i $u\in H$, on $H$ \'{e}s un espai de Hilbert amb producte escalar $\langle\cdot,\cdot\rangle$, aleshores $u_{\epsilon}$ convergir\`{a} feblement a $u$ si i nom\'{e}s si per tot $v\in H$, $\langle u_{\epsilon},v\rangle\xrightarrow[\epsilon\to0]{}\langle u,v\rangle$.
+\end{proposicio}
+
+\subsection{Teoria de distribucions}
+
+Expliquem primer la notaci\'{o} que farem servir per les diferents normes dels diferents espais de Banach.
+
+En aquesta secci\'{o} $\Omega$ far\`{a} refer\`{e}ncia sempre a un obert de $\mathbb{R}^n$. Per un punt $x\in\Omega$, denotem per $|x|$ la seva norma euclidiana. Donada una funci\'{o} $v:\Omega\rightarrow\mathbb{C}$, denotarem de la seg\"{u}ent manera les seves normes. Per $1\leq p<\infty$, escrivim:
+\begin{equation}
+||v||_{L_p}=\left(\int_{\Omega}|v(x)|^pdx\right)^{1/p}.
+\end{equation}
+
+Pel cas $p=\infty$, posem $||v||_{L^{\infty}}$ el suprem essencial de $v$ sobre $\Omega$. Quan $v$ \'{e}s cont\'{i}nua, el suprem essencial \'{e}s igual a simplement el suprem. Pels casos concrets de $p=2,\infty$ escriurem per brevetat $||v||_0=||v||_{L^2}$ i $|v|_0=||v||_{L^{\infty}}$.
+
+Denotem tamb\'{e} el producte escalar a $L^2(\Omega)$ de $v$ amb $w$ com
+\begin{equation}
+(v,w)=\int_{\Omega}v(x)\overline{w(x)}dx.
+\end{equation}
+
+Anem a fer una mica de teoria de distribucions, la qual ens servir\`{a} per poder definir els espais de S\'{o}bolev amb qu\`{e} treballarem a la seg\"{u}ent secci\'{o}.
+
+\begin{definicio}
+Si $\alpha=(\alpha_1,\ldots,\alpha_n)$ \'{e}s una $n$-pla de nombres enters positius, li diem \textbf{multi\'{i}ndex} i denotem el monomi $x^{\alpha}=x_1^{\alpha_1}\cdots x_n^{\alpha_n}$. Aquest multi\'{i}ndex tindr\`{a} grau $|\alpha|=\alpha_1+\cdots+\alpha_n$. Aix\'{i} mateix, escrivim $D_i=\frac{\partial}{\partial x_i}$, $D^{\alpha}=D_1^{\alpha_1}\cdots D_n^{\alpha_n}$.
+\end{definicio}
+
+Recordem que $C^{\infty}(\Omega)$ \'{e}s l'espai de funcions llises, \'{e}s a dir, infinitament derivables. Per la seva part, $C_0^{\infty}(\Omega)=\{u\in C^{\infty}(\Omega)\,|\,\supp u\text{ \'{e}s compacte}\}$ denota l'espai de funcions llises amb suport compacte.
+
+\begin{definicio}
+Diem que un espai vectorial topol\`{o}gic \'{e}s \textbf{localment convex} quan tot punt t\'{e} una base d'entorns convexos.
+\end{definicio}
+
+\begin{definicio}
+Diem que una successi\'{o} $\{\phi_n\}$ de funcions de $C_0^{\infty}(\Omega)$ convergeix a una certa $\phi\in C_0^{\infty}(\Omega)$ en el sentit de $\mathcal{D}(\Omega)$ quan existeix un compacte $K\subseteq\Omega$ tal que es compleixen les dues condicions seg\"{u}ents:
+\begin{itemize}
+\item per tot $n$, $\supp(\phi_n-\phi)\subseteq K$,
+\item per tot multi\'{i}ndex $\alpha$, $D^{\alpha}\phi_n\xrightarrow[n\to\infty]{}D^{\alpha}\phi$ uniformement a $K$.
+\end{itemize}
+
+Existeix una topologia localment convexa sobre $C_0^{\infty}(\Omega)$ tal que qualsevol operador lineal $T:C_0^{\infty}(\Omega)\rightarrow\mathbb{C}$ \'{e}s continu si i nom\'{e}s si $T(\phi_n)\rightarrow T(\phi)$ sempre que una successi\'{o} $\phi_n\rightarrow\phi$ en el sentit de $\mathcal{D}(\Omega)$.
+
+Aquest espai vectorial topol\`{o}gic l'anomenem $\mathcal{D}(\Omega)$ i els seus elements s'anomenen \textbf{funcions de prova}.
+\end{definicio}
+
+$\mathcal{D}(\Omega)$ \'{e}s un espai vectorial topol\`{o}gic, per\`{o} no \'{e}s un espai normat.
+
+\begin{definicio}\label{Def: distribucio Schwarz}
+L'espai dual topol\`{o}gic de $\mathcal{D}(\Omega)$ \'{e}s $\mathcal{D}'(\Omega)=\{T:\mathcal{D}(\Omega)\rightarrow\mathbb{C}\,|\,T\text{ \'{e}s lineal i continu}\}$ i es diu \textbf{espai de distribucions de Schwarz}. Dotem aquest espai de la \textbf{topologia feble estrella}, que \'{e}s la topologia menys fina tal que per tot $\phi\in\mathcal{D}(\Omega)$, l'aplicaci\'{o} $F_{\phi}:\mathcal{D}'(\Omega)\rightarrow\mathbb{C}$, definida per $F_{\phi}(T)=T(\phi)$, \'{e}s cont\'{i}nua.
+
+Amb aquesta topologia, $\mathcal{D}'(\Omega)$ \'{e}s un espai vectorial topol\`{o}gic localment convex en el qual, donats $T_n,T\in\mathcal{D}'(\Omega)$, $T_n\xrightarrow[n\to\infty]{}T$ si i nom\'{e}s si $T_n(\phi)\xrightarrow[n\to\infty]{}T(\phi)$ per tota funci\'{o} de prova $\phi\in\mathcal{D}(\Omega)$.
+\end{definicio}
+
+\begin{definicio}
+Donada $u:\Omega\rightarrow\mathbb{C}$, es diu que \'{e}s \textbf{localment integrable}, i es nota $u\in L_{\text{loc}}^1(\Omega)$, quan per tot $K\subseteq\Omega$ compacte, $u\in L^1(K)$.
+\end{definicio}
+
+\begin{proposicio}\label{Pro: distribucio funcio}
+Sigui $u\in L_{\text{loc}}^1(\Omega)$. Llavors existeix una distribuci\'{o} $T_u\in\mathcal{D}'(\Omega)$ definida per:
+\[T_u(\phi)=\int_{\Omega}u(x)\phi(x)dx.\]
+\end{proposicio}
+
+La integral est\`{a} ben definida, ja que $u$ \'{e}s localment integrable. A m\'{e}s, es pot comprovar que efectivament $T_u$ \'{e}s lineal i continu.
+
+A tot $u$ localment integrable li pot correspondre una distribuci\'{o} $T_u\in\mathcal{D}'(\Omega)$, per\`{o} no a tota distribuci\'{o} $T\in\mathcal{D}'(\Omega)$ li pot correspondre una funci\'{o} $u$. Com a exemple t\'{i}pic d'aquest fet tenim la distribuci\'{o} delta de Dirac:
+\[
+\begin{split}
+\delta:\mathcal{D}(\mathbb{R}^n)&\longrightarrow\mathbb{C}.\\
+\phi&\longmapsto\phi(0)
+\end{split}
+\]
+
+Aquesta $\delta\in\mathcal{D}'(\mathbb{R}^n)$ \'{e}s una distribuci\'{o} ben definida, per\`{o} no existeix cap funci\'{o} $u:\mathbb{R}^n\rightarrow\mathbb{C}$ tal que
+\[\int_{\mathbb{R}^n}u(x)\phi(x)dx=\delta(\phi)=\phi(0)\]
+per tota funci\'{o} $\phi\in\mathcal{D}(\mathbb{R}^n)$.
+
+\begin{proposicio}\label{Pro: integracio per parts multiindex}
+Siguin $\alpha$ un multi\'{i}ndex, $u\in C^{|\alpha|}(\Omega)$ i $\phi\in\mathcal{D}(\Omega)$.
+
+\[\int_{\Omega}D^{\alpha}u(x)\phi(x)dx=(-1)^{|\alpha|}\int_{\Omega}u(x)D^{\alpha}\phi(x)dx\]
+\end{proposicio}
+
+Aquesta proposici\'{o} \'{e}s b\`{a}sicament una versi\'{o} de la integraci\'{o} per parts expressada en termes de multi\'{i}ndexs, amb la particularitat que la integral sobre la frontera de $\Omega$ s'anul\textperiodcentered la per tenir l'integrand suport compacte.
+
+Aquesta igualtat motiva la definici\'{o} de la derivada d'una distribuci\'{o}.
+
+\begin{definicio}\label{Def: derivada distribucional}
+Siguin $\alpha$ un multi\'{i}ndex i $T\in\mathcal{D}'(\Omega)$. Definim $D^{\alpha}T:\mathcal{D}(\Omega)\rightarrow\mathbb{C}$ com
+\begin{equation}
+(D^{\alpha}T)(\phi)=(-1)^{|\alpha|}T(D^{\alpha}\phi).
+\end{equation}
+\end{definicio}
+
+Es pot comprovar que $D^{\alpha}T\in\mathcal{D}'(\Omega)$. La definici\'{o} \ref{Def: derivada distribucional} i la proposici\'{o} \ref{Pro: integracio per parts multiindex} estan relacionades pel fet que, donada $u\in C^{|\alpha|}(\Omega)$, $D^{\alpha}T_u=T_{D^{\alpha}u}$.
+
+Ara definirem una versi\'{o} m\'{e}s feble de la derivada, de manera que puguem derivar funcions que en el sentit usual no s\'{o}n derivables.
+
+\begin{definicio}\label{Def: derivada feble}
+Sigui $u\in L_{\text{loc}}^1(\Omega)$. Definim la seva \textbf{derivada parcial feble o distribucional} com la funci\'{o} $D^{\alpha}u\in L_{\text{loc}}^1(\Omega)$ tal que $T_{D^{\alpha}u}=D^{\alpha}(T_u)$, en cas que aquesta funci\'{o} existeixi. 
+\end{definicio}
+
+Observem que quan ten\'{i}em $u\in C^{|\alpha|}(\Omega)$, la seva derivada era una funci\'{o} $D^{\alpha}u$ tal que $D^{\alpha}T_u=T_{D^{\alpha}u}$. Ara, tot i que $u$ no sigui diferenciable, seguim podent definir $D^{\alpha}u$ com la funci\'{o} tal que $D^{\alpha}T_u=T_{D^{\alpha}u}$. Aquesta relaci\'{o}, expressada en termes d'integral, \'{e}s la seg\"{u}ent:
+\begin{equation}
+\int_{\Omega}u(x)D^{\alpha}\phi(x)dx=(-1)^{|\alpha|}\int_{\Omega}D^{\alpha}u(x)\phi(x)dx,
+\end{equation}
+per tota funci\'{o} de prova $\phi\in\mathcal{D}(\Omega)$. Es pot veure que la derivada distribucional \'{e}s \'{u}nica tret de conjunts de mesura de Lebesgue nul\textperiodcentered la.
+
+\subsection{Espais de S\'{o}bolev}
+
+Ara passem a definir ja les normes i els espais de S\'{o}bolev.
+
+\begin{definicio}
+Sigui $u\in L_{\text{loc}}^1(\Omega)$ tal que les seves derivades distribucionals $D^{\alpha}u$ per $0\leq|\alpha|\leq m$ existeixen. Sigui $1\leq p<\infty$. Definim les seg\"{u}ents normes:
+\begin{equation}||u||_{m,p}=\left(\sum_{0\leq|\alpha|\leq m}||D^{\alpha}u||_{L^p}^p\right)^{1/p},
+\end{equation}
+\begin{equation}
+||u||_{m,\infty}=\max_{0\leq|\alpha|\leq m}||D^{\alpha}u||_{L^{\infty}}.
+\end{equation}
+\end{definicio}
+
+\begin{definicio}
+Per $m$ enter positiu i $1\leq p\leq\infty$, $H^{m,p}(\Omega)$ es defineix com la compleci\'{o} de l'espai normat $\big(\{u\in C^m(\Omega)\,|\,||u||_{m,p}<\infty\},||\cdot||_{m,p}\big)$.
+
+Tamb\'{e} definim l'espai $W^{m,p}(\Omega)=\{u\in L^p(\Omega)\,|\,D^{\alpha}u\in L^p(\Omega)\text{ per tot }0\leq|\alpha|\leq m\}$. Aqu\'{i} $D^{\alpha}u$ denota la derivada distribucional explicada a la definici\'{o} \ref{Def: derivada feble}.
+
+Aquests conjunts, amb la norma $||\cdot||_{m,p}$ s\'{o}n els anomenats \textbf{espais de S\'{o}bolev}.
+\end{definicio}
+
+La condici\'{o} de $||u||_{m,p}<\infty$ \'{e}s equivalent a que per tot $0\leq|\alpha|\leq m$, $D^{\alpha}u\in L^p(\Omega)$. Tamb\'{e} es veu clarament que $W^{0,p}(\Omega)=L^p(\Omega)$. \'{E}s tamb\'{e} clar que per tots $m,p$, $W^{m,p}(\Omega)\subseteq L^p(\Omega)$.
+
+\begin{teorema}
+$W^{m,p}(\Omega)$ \'{e}s un espai de Banach.
+\end{teorema}
+
+\begin{corollari}
+$H^{m,p}(\Omega)\subseteq W^{m,p}(\Omega)$
+\end{corollari}
+\begin{proof}
+Si posem $S=\{\phi\in C^m(\Omega)\,|\,||\phi||_{m,p}<\infty\}$, \'{e}s clar que $S\subseteq W^{m,p}(\Omega)$. Per tant existeix una isometria entre la compleci\'{o} de $S$, que \'{e}s $H^{m,p}(\Omega)$, i l'adher\`{e}ncia de $S$ dins de $W^{m,p}(\Omega)$. Com a conseq\"{u}\`{e}ncia, podem identificar $\overline{S}$ amb $H^{m,p}(\Omega)$, resultant $H^{m,p}(\Omega)=\overline{S}\subseteq W^{m,p}(\Omega)$.
+\end{proof}
+
+\begin{definicio}
+Donats $u,v\in W^{m,2}(\Omega)$, podem definir el seu producte escalar com
+\[(u,v)_m=\sum_{0\leq|\alpha|\leq m}(D^{\alpha}u,D^{\alpha}v),\]
+on recordem que $(\cdot,\cdot)$ denota el producte escalar usual a $L^2(\Omega)$.
+\end{definicio}
+
+\'{E}s rutinari comprovar que aquesta f\'{o}rmula defineix efectivament un producte escalar sobre $W^{m,2}(\Omega)$.
+
+\begin{teorema}
+Si $1\leq p<\infty$, llavors
+\[H^{m,p}(\Omega)=W^{m,p}(\Omega).\]
+\end{teorema}
+
+Aquest teorema ens diu precisament que $\{u\in C^m(\Omega)\,|\,||u||_{m,p}<\infty\}=C^m(\Omega)\cap W^{m,p}(\Omega)$ \'{e}s dens a $W^{m,p}(\Omega)$. Aix\`{o} vol dir que tota funci\'{o} de $W^{m,p}(\Omega)$ es pot aproximar per funcions de classe $C^m(\Omega)$. Hem hagut d'ampliar el concepte de derivada al de derivada distribucional perqu\`{e} $C^m(\Omega)$ amb la norma $||\cdot||_{m,p}$ no \'{e}s de Banach, i necessitem espais de Banach per poder treballar. Llavors vol\'{i}em completar $C^m(\Omega)$ a un espai de Banach, que ha estat $W^{m,p}(\Omega)$ i per aix\`{o} l'hem constru\"{i}t.
+
+Tot i que els $H^{m,p}(\Omega)$ siguin de dimensi\'{o} infinita i per tant no tota successi\'{o} fitada tingui una parcial convergent, s\'{i} que tindr\`{a} una parcial convergent feblement, com diu la seg\"{u}ent proposici\'{o} (que es pot deduir a partir del teorema de Alaoglu).
+
+\begin{proposicio}\label{Pro: Alaoglu}
+Sigui $u_n\in H^{m,p}(\Omega)$ una successi\'{o} fitada, \'{e}s a dir, per la qual existeix un $C>0$ tal que per tot $n$, $||u_n||_m\leq C$. Aleshores existeix una parcial $u_{n_k}$ que convergeix feblement a un cert $u\in H^{m,p}(\Omega)$.
+\end{proposicio}
+\vspace{3mm}
+
+Fins ara hem definit els espais de S\'{o}bolev per $m$ enter positiu. Mitjan\c{c}ant un m\`{e}tode d'interpolaci\'{o} complexa, es pot estendre aquesta definici\'{o} per valors reals de $m$. Aquesta extensi\'{o}, quan $\Omega$ \'{e}s $\mathbb{R}^n$ es pot fer mitjan\c{c}ant la transformada de Fourier. Aquests nous espais s'anomenen $H^{s,p}$. Quan $s$ \'{e}s un enter, es recupera l'espai $W^{s,p}$ definit abans. Aquesta extensi\'{o} no s'ha de confondre amb els espais de Nikol'skii, que en alguns llibres s'escriuen tamb\'{e} com $H^{s,p}$. Per conveni, en aquest context, quan ens referim a $H^{s,p}$ amb $s$ real, li direm $s$. En canvi, quan sigui un nombre enter, li direm $m$ i escriurem $H^{m,p}$.
+
+\begin{definicio}
+Definim la \textbf{classe de Schwarz}
+\begin{equation}
+\mathcal{S}(\mathbb{R}^n)=\left\{\phi\in C^{\infty}(\mathbb{R}^n)\,|\,\forall\alpha,\beta\text{ multi\'{i}ndexs, }\sup_{x\in\mathbb{R}^n}|x^{\alpha}D^{\beta}\phi(x)|<\infty\right\}.
+\end{equation}
+Donem a $\mathcal{S}(\mathbb{R}^n)$ una topologia localment convexa tal que per tota successi\'{o} $\phi_j\in\mathcal{S}(\mathbb{R}^n)$,
+\[\phi_j\xrightarrow[j\to\infty]{}0\Longleftrightarrow\forall\alpha,\beta\,\,x^{\alpha}D^{\beta}\phi_j\xrightarrow[j\to\infty]{}0\text{ uniformement a }\mathbb{R}^n.\]
+
+Tamb\'{e} podem donar al seu dual topol\`{o}gic $S'(\mathbb{R}^n)$ una topologia; concretament, la topologia feble estrella, definida de la mateixa manera que a la definici\'{o} \ref{Def: distribucio Schwarz}. Els elements de $S'(\mathbb{R}^n)$ s'anomenen \textbf{distribucions temperades}.
+\end{definicio}
+
+\begin{definicio}
+Definim la \textbf{transformada de Fourier} $\mathcal{F}:\mathcal{S}(\mathbb{R}^n)\rightarrow\mathcal{S}(\mathbb{R}^n)$.
+
+\begin{equation}
+\mathcal{F}\phi(\xi)=\frac{1}{(2\pi)^{n/2}}\int_{\mathbb{R}^n}\phi(x)e^{-i\langle x,\xi\rangle}dx
+\end{equation}
+
+Tamb\'{e} podem definir la transformada de Fourier sobre l'espai de distribucions de la forma natural. $\mathcal{F}:\mathcal{S}'(\mathbb{R}^n)\rightarrow\mathcal{S}'(\mathbb{R}^n)$. Donada $T\in\mathcal{S}'(\mathbb{R}^n)$, definim $\mathcal{F}T\in\mathcal{S}'(\mathbb{R}^n)$ com
+\[\mathcal{F}T(\phi)=T(\mathcal{F}\phi).\]
+\end{definicio}
+
+\begin{teorema}
+La transformada de Fourier t\'{e} inversa $\mathcal{F}^{-1}:\mathcal{S}(\mathbb{R}^n)\rightarrow\mathcal{S}(\mathbb{R}^n)$ definida per
+\begin{equation}
+\mathcal{F}^{-1}\phi(x)=\frac{1}{(2\pi)^{n/2}}\int_{\mathbb{R}^n}\phi(\xi)e^{i\langle x,\xi\rangle}d\xi.
+\end{equation}
+
+A m\'{e}s, $\mathcal{F}$ \'{e}s tamb\'{e} invertible sobre $S'(\mathbb{R}^n)$ i la seva inversa \'{e}s precisament $\mathcal{F}^{-1}T(\phi)=T(\mathcal{F}^{-1}\phi)$.
+\end{teorema}
+
+\begin{definicio}
+Donat un $z\in\mathbb{C}$, definim el \textbf{potencial de Bessel} $J^z$ com l'operador
+\begin{equation}
+\begin{split}
+J^z:\mathcal{S}'(\mathbb{R}^n)&\longrightarrow\mathcal{S}'(\mathbb{R}^n).\\
+u&\longmapsto\mathcal{F}^{-1}\big((1+|\cdot|^2)^{-z/2}\mathcal{F}u\big)
+\end{split}
+\end{equation}
+\end{definicio}
+
+\'{E}s clar que el potencial de Bessel \'{e}s bijectiu. Aquest operador es pot interpretar com una mena de derivada fraccionaria.
+
+Per $1\leq p\leq\infty$, hi ha una injecci\'{o} can\`{o}nica $L^p(\mathbb{R}^n)\rightarrow\mathcal{S}'(\mathbb{R}^n)$, que porta cada $f\in L^p(\mathbb{R}^n)$ a $T_f\in\mathcal{S}'(\mathbb{R}^n)$ definida per
+\begin{equation}
+T_f(\phi)=\int_{\mathbb{R}^n}f(x)\phi(x)dx.
+\end{equation}
+
+Aquesta injecci\'{o} \'{e}s similar a l'exposada a la proposici\'{o} \ref{Pro: distribucio funcio}.
+
+Ara ja tenim les eines per definir l'extensi\'{o} dels espais de S\'{o}bolev quan $s$ \'{e}s real.
+
+\begin{definicio}
+Per $s\in\mathbb{R}$ i $1\leq p\leq\infty$, definim
+\begin{equation}
+H^{s,p}(\mathbb{R}^n)=\{u\in\mathcal{S}'(\mathbb{R}^n)\,|\,\exists f\in L^p(\mathbb{R}^n):u=J^sT_f\}.
+\end{equation}
+
+Tamb\'{e} definim la norma sobre aquest nou espai $H^{s,p}(\mathbb{R}^n)$. Donat $u\in H^{s,p}(\mathbb{R}^n)$, existeix un \'{u}nic $\tilde{u}\in L^p(\mathbb{R}^n)$ tal que $u=\mathcal{J}^sT_{\tilde{u}}$. Definim
+
+\begin{equation}
+||u||_{s,p}=||\tilde{u}||_{L^p}.
+\end{equation}
+\end{definicio}
+
+\begin{teorema}\label{Teo: Sobolev s}
+Aquest teorema recull alguns resultats sobre $H^{s,p}(\mathbb{R}^n)$.
+\begin{enumerate}
+\item $H^{s,p}(\mathbb{R}^n)$ \'{e}s un espai de Banach.
+\item Si $s\geq0$ i $1\leq p<\infty$, $\mathcal{D}(\mathbb{R}^n)$ \'{e}s dens en $H^{s,p}(\mathbb{R}^n)$.
+\item Si $t<s$, $H^{s,p}(\mathbb{R}^n)\subseteq H^{t,p}(\mathbb{R}^n)$.
+\item Si $s$ \'{e}s un enter no negatiu, i $1<p<\infty$, aleshores $H^{s,p}(\mathbb{R}^n)$ coincideix amb $W^{s,p}(\mathbb{R}^n)$, coincidint tamb\'{e} les seves normes.
+\end{enumerate}
+\end{teorema}
+
+A partir d'ara nom\'{e}s treballarem amb $p=2$, pel qual, per brevetat, escriurem $H^s(\mathbb{R}^n)=H^{s,2}(\mathbb{R}^n)$ i $||\cdot||_s=||\cdot||_{s,2}$. Sobre $H^s(\mathbb{R}^n)$ definim el producte escalar $(\cdot,\cdot)_s$ de tal manera que per $u,v\in H^s(\mathbb{R}^n)$, si $\tilde{u},\tilde{v}\in L^2(\mathbb{R}^n)$ s\'{o}n tals que $u=\mathcal{J}^sT_{\tilde{u}}$, $v=\mathcal{J}^sT_{\tilde{v}}$, aleshores
+\[(u,v)_s=(\tilde{u},\tilde{v}).\]
+
+Vegem algunes desigualtats sobre normes a aquests espais de S\'{o}bolev.
+
+\begin{lema}\label{Lem: desigualtats Sobolev}
+\begin{enumerate}
+\item\label{Lem: desigualtats Sobolev 1} Siguin $s>\frac{n}{2}$ i $k$ un enter no negatiu. Aleshores existeix una constant $c>0$ tal que per tot $v\in H^{s+k}(\mathbb{R}^n)$,
+\begin{equation}\label{Equ. desigualtats Sobolev 1}
+|v|_{C^k}\leq c||v||_{s+k}.
+\end{equation}
+\item Per $m$ enter no negatiu existeix $c>0$ tal que per tots $u,v\in L^{\infty}(\mathbb{R}^n)\cap H^m(\mathbb{R}^n)$,
+\begin{equation}\label{Equ. desigualtats Sobolev 21}
+||uv||_m\leq c\big(|u|_{L^{\infty}}||D^mv||_0+||D^mu||_0|v|_{L^{\infty}}\big),
+\end{equation}
+\begin{equation}
+\sum_{0\leq|\alpha|\leq m}||D^{\alpha}(uv)-uD^{\alpha}v||_0\leq c\big(|\nabla u|_{L^{\infty}}||D^{m-1}v||_0+||D^mu||_0|v|_{L^{\infty}}\big).
+\end{equation}
+\item Si $s>\frac{n}{2}$, $H^s(\mathbb{R}^n)$ \'{e}s una \`{a}lgebra de Banach, \'{e}s a dir, existeix una $c>0$ tal que per tots $u,v\in H^s(\mathbb{R}^n)$,
+\begin{equation}
+||uv||_s\leq c||u||_s||v||_s.
+\end{equation}
+\item (Interpolaci\'{o} en espais de S\'{o}bolev) Donada $s>0$, existeix una constant $C_s$ tal que per tot $v\in H^s(\mathbb{R}^n)$ i tot $0<s'<s$,
+\begin{equation}\label{Equ. desigualtats Sobolev 4}
+||v||_{s'}\leq C_s||v||_0^{1-s'/s}||v||_s^{s'/s}.
+\end{equation}
+\item Siguin $m,k$ enters no negatius, $v\in H^m(\mathbb{R}^n)$, $\epsilon>0$ i $\mathcal{J}_{\epsilon}$ la convoluci\'{o} amb l'aproximaci\'{o} de la unitat definida en \eqref{Equ. aproximacio unitat}.
+\begin{equation}\label{Equ. desigualtats Sobolev 51}
+||\mathcal{J}_{\epsilon}v||_{m+k}\leq\frac{c_{mk}}{\epsilon^k}||v||_m
+\end{equation}
+\begin{equation}\label{Equ. desigualtats Sobolev 52}
+|\mathcal{J}_{\epsilon}D^kv|_{L^{\infty}}\leq\frac{c_k}{\epsilon^{n/2+k}}||v||_0
+\end{equation}
+\end{enumerate}
+\end{lema}
+\vspace{3mm}
+
+Per \'{u}ltim, vegem la projecci\'{o} de Leray, que \'{e}s un operador que projecta cada funci\'{o} sobre l'espai de funcions de diverg\`{e}ncia nul\textperiodcentered la.
+
+\begin{lema}\label{Lem: Leray original}
+Sigui $v\in H^m(\mathbb{R}^N)$ per $m$ enter no negatiu. Aleshores existeixen $w,\varphi$ tals que
+\begin{equation}
+v=w+\nabla\varphi,
+\end{equation}
+amb $\diver w=0$. Aquesta descomposici\'{o} \'{e}s \'{u}nica tret d'una constant additiva per $\varphi$. Aprofitem aquest fet per definir la \textbf{projecci\'{o} de Leray} $Pv=w$ sobre l'espai de funcions de diverg\`{e}ncia nul\textperiodcentered la.
+\end{lema}
+
+Algunes propietats b\`{a}siques de la projecci\'{o} de Leray es poden trobar a l'ap\`{e}ndix \ref{App: apendix}.
+
+\section{Exist\`{e}ncia i unicitat de soluci\'{o}}
+
+En aquesta secci\'{o} ens proposem ja demostrar l'exist\`{e}ncia i la unicitat de solucions prou regulars de l'equaci\'{o} de Navier-Stokes \eqref{Equ. Navier-Stokes}. Concretament, treballarem amb funcions i solucions definides sobre els espais de S\'{o}bolev. Ens restringirem al cas de fluids incompressibles ($\diver u=0$) i inicialment homogenis. Vam veure a la proposici\'{o} \ref{Pro: homogeni inicial} que aix\`{o} implicava que $\rho$ era constant en el temps i en l'espai. Per tant la considerarem igual a $1$. Tamb\'{e} ens restringirem a fluids definits sobre tot $\mathbb{R}^N$, amb $N=2$ o $3$.
+
+\begin{equation}\label{Equ. Navier-Stokes Majda-Bertozzi}
+\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\nabla p+\nu\Delta v+F}\\\diver v=0\\v|_{t=0}=v_0\end{array}\right.
+\end{equation}
+
+Aquesta \'{e}s l'equaci\'{o} de Navier-Stokes per tals fluids. Com a cas particular, s'obt\'{e} l'equaci\'{o} d'Euler prenent $\nu=0$. Com que nom\'{e}s tindrem un coeficient involucrat en la viscositat: el coeficient de viscositat cinem\`{a}tic $\nu$, a aquesta magnitud li direm simplement viscositat.
+
+Aquesta equaci\'{o} t\'{e} la dificultat que el terme $v\cdot\nabla v$ no \'{e}s lineal, motiu pel qual ser\`{a} m\'{e}s dif\'{i}cil demostrar l'exist\`{e}ncia i la unicitat de soluci\'{o}. Necessitarem buscar m\`{e}todes m\'{e}s sofisticats per poder demostrar el que volem. Una eina que ens ser\`{a} molt \'{u}til \'{e}s l'energia.
+
+L'\textbf{energia} total d'un fluid amb un camp de velocitats $v$ seria
+\[\int_{\mathbb{R}^n}\frac{1}{2}\rho(x,t)|v(x,t)|^2dx,\]
+per\`{o} com que la densitat \'{e}s constant i no ens \'{e}s \'{u}til considerar les constants, direm senzillament que l'energia \'{e}s $||v(\cdot,t)||_0$. Per extensi\'{o}, tamb\'{e} anomenarem energies d'ordre superior els $||v(\cdot,t)||_m$. En aquesta secci\'{o} treballarem molt amb fites de l'energia.
+
+\subsection{Unicitat de soluci\'{o}}
+
+Vegem que la soluci\'{o} de l'equaci\'{o} de Navier-Stokes \eqref{Equ. Navier-Stokes Majda-Bertozzi} \'{e}s \'{u}nica ---i per tant en particular ho ser\`{a} tamb\'{e} la soluci\'{o} de l'equaci\'{o} d'Euler---.
+
+En el cas de funcions que depenen d'una variable espacial i una variable temporal, les normes $||\cdot||_m$ sempre es referiran a la variable espacial fixat un temps. A m\'{e}s treballem amb funcions vectorials. Per tant, donades $u,v:\mathbb{R}^N\times[0,T]\rightarrow\mathbb{R}^N$ amb $u(\cdot,t),v(\cdot,t)\in H^s(\mathbb{R}^N)$, definim el seu producte escalar respecte de la variable espacial a temps fix com
+\[(u,v)_s=\sum_{i=1}^N(u_i,v_i)_s.\]
+
+\begin{proposicio}\label{Pro: unicitat}
+Siguin $v_1,v_2:\mathbb{R}^N\times[0,T]\rightarrow\mathbb{R}^N$ solucions llises de l'equaci\'{o} de Navier-Stokes \eqref{Equ. Navier-Stokes Majda-Bertozzi} amb forces $F_1,F_2$ respectivament i la mateixa viscositat $\nu$. Suposem a m\'{e}s que a temps $t$ fix, $v_1(\cdot,t),v_2(\cdot,t)\in L^2(\mathbb{R}^N)$.
+
+\begin{equation}\label{Equ. unicitat}
+\sup_{0\leq t\leq T}||v_1-v_2||_0\leq\left(||(v_1-v_2)|_{t=0}||_0+\int_0^T||F_1-F_2||_0dt\right)\exp\left(\int_0^T|\nabla v_2|_{L^{\infty}}dt\right)
+\end{equation}
+\end{proposicio}
+\begin{proof}
+Posem que $p_1,p_2$ s\'{o}n les pressions associades a les solucions $v_1,v_2$ respectivament. Estudiem les defer\`{e}ncies $\tilde{v}=v_1-v_2$, $\tilde{p}=p_1-p_2$, $\tilde{F}=F_1-F_2$. Restem la primera equaci\'{o} de \eqref{Equ. Navier-Stokes Majda-Bertozzi} per $v_1$ menys la mateixa equaci\'{o} per $v_2$. Degut a la linealitat de la majoria dels termes, obtenim la seg\"{u}ent expressi\'{o}:
+\[\frac{\partial\tilde{v}}{\partial t}+v_1\cdot\nabla v_1-v_2\cdot\nabla v_2=-\nabla\tilde{p}+\nu\Delta\tilde{v}+\tilde{F}.\]
+
+Al primer membre sumem i restem $v_1\cdot\nabla v_2$.
+
+\[\frac{\partial\tilde{v}}{\partial t}+v_1\cdot\nabla\tilde{v}+\tilde{v}\cdot\nabla v_2=-\nabla\tilde{p}+\nu\Delta\tilde{v}+\tilde{F}\]
+
+Fem ara el producte escalar a $L^2(\mathbb{R}^N)$ de tots dos membres per $\tilde{v}$.
+
+\[(\tilde{v}_t,\tilde{v})+(v_1\cdot\nabla\tilde{v},\tilde{v})+(\tilde{v}\cdot\nabla v_2,\tilde{v})=-(\nabla\tilde{p},\tilde{v})+\nu(\Delta\tilde{v},\tilde{v})+(\tilde{F},\tilde{v})\]
+
+Utilitzant el teorema \ref{Teo: integracio parts}, integrem per parts el terme $(\Delta\tilde{v},\tilde{v})$ per obtenir el seg\"{u}ent:
+\[\int_{\Omega}\Delta\tilde{v}_i\,\tilde{v}_idx=\int_{\Omega}\diver\nabla\tilde{v}_i\,\tilde{v}_idx=\int_{\partial\Omega}\tilde{v}_i\langle\nabla\tilde{v}_i,n\rangle dS-\int_{\Omega}\langle\nabla\tilde{v}_i,\nabla\tilde{v}_i\rangle dx.\]
+
+Com que $v_1$, $v_2$ decreixen suficientment r\`{a}pid, quan prenem $\Omega$ suficientment gran, la integral sobre $\partial\Omega$ es fa arbitr\`{a}riament petita. Per tant en el cas l\'{i}mit, tenim que $(\Delta\tilde{v},\tilde{v})=-(\nabla\tilde{v},\nabla\tilde{v})$.
+
+Treballem ara el terme $(v_1\cdot\nabla\tilde{v},\tilde{v})$. Veiem primer que $(v_1\cdot\nabla\tilde{v})_i=\langle v_1,\nabla\tilde{v}_i\rangle$. Integrant per parts obtenim:
+\[\int_{\Omega}\langle v_1,\nabla\tilde{v}_i\rangle\tilde{v}_idx=\int_{\Omega}\langle v_1,\nabla\left(\frac{1}{2}\tilde{v}_i^2\right)\rangle dx=\int_{\partial\Omega}\langle\frac{1}{2}v_1\tilde{v}_i^2,n\rangle dS-\int_{\Omega}\frac{1}{2}\tilde{v}_i^2\diver v_1dx=\int_{\partial\Omega}\langle\frac{1}{2}v_1\tilde{v}_i^2,n\rangle dS.\]
+
+La primera igualtat \'{e}s deguda a que $\nabla\tilde{v}_i\,\tilde{v}_i=\nabla(\frac{1}{2}\tilde{v}_i^2)$. La darrera igualtat surt del fet que $\diver v_1=0$, per ser el fluid incompressible. Com que $v_1,\tilde{v}_i$ decreixen suficientment r\`{a}pid, quan s'agafa $\Omega$ prou gran, l'\'{u}ltima integral es fa arbitr\`{a}riament petita. En el l\'{i}mit, $(v_1\cdot\nabla\tilde{v},\tilde{v})=0$.
+
+Aplicant novament la integraci\'{o} per parts, tenim que $-(\nabla\tilde{p},\tilde{v})=(\tilde{p},\diver\tilde{v})$, que \'{e}s igual a $0$, ja que $\diver\tilde{v}=0$. Aplicant aquests c\`{a}lculs, podem expressar la igualtat que ten\'{i}em com:
+\[(\tilde{v}_t,\tilde{v})+\nu(\nabla\tilde{v},\nabla\tilde{v})=-(\tilde{v}\cdot\nabla v_2,\tilde{v})+(\tilde{F},\tilde{v}).\]
+
+L'operaci\'{o} $(\cdot,\cdot)$ \'{e}s un producte escalar sobre $L^2(\mathbb{R}^N)$. Per tant compleix la desigualtat de Cauchy-Schwarz: $|(f,g)|\leq||f||_0||g||_0$. A m\'{e}s \'{e}s f\`{a}cil observar que $\frac{d}{dt}(f,g)=(f_t,g)+(f,g_t)$. Per tant tenim la seg\"{u}ent desigualtat:
+\[\frac{1}{2}\frac{d}{dt}||\tilde{v}||_0^2+\nu||\nabla\tilde{v}|_0^2=(\tilde{v}_t,\tilde{v})+\nu(\nabla\tilde{v},\nabla\tilde{v})=-(\tilde{v}\cdot\nabla v_2,\tilde{v})+(\tilde{F},\tilde{v})\leq||\tilde{v}\cdot\nabla v_2||_0||\tilde{v}||_0+||\tilde{F}||_0||\tilde{v}||_0.\]
+
+Ara b\'{e}, $\nu\geq0$. Per tant:
+\[\frac{d}{dt}||\tilde{v}||_0\,||\tilde{v}||_0=\frac{1}{2}\frac{d}{dt}||\tilde{v}||_0^2\leq\frac{1}{2}\frac{d}{dt}||\tilde{v}||_0^2+\nu||\nabla\tilde{v}|_0^2.\]
+
+A m\'{e}s, tenim que
+\[||\tilde{v}\cdot\nabla v_2||_0^2=\int_{\mathbb{R}^N}\sum_{i=1}^N\langle\tilde{v},\nabla v_{2i}\rangle^2\leq\int_{\mathbb{R}^N}\sum_{i=1}^N|\tilde{v}|^2|\nabla v_{2i}|^2\leq\int_{\mathbb{R}^N}\sum_{i=1}^N|\tilde{v}|^2|\nabla v_{2i}|_{L^{\infty}}^2=|\nabla v_2|_{L^{\infty}}^2\int_{\mathbb{R}^N}|\tilde{v}|^2=|\nabla v_2|_{L^{\infty}}^2||\tilde{v}||_0^2.\]
+
+Apliquem aix\`{o} a la desigualtat que ten\'{i}em al principi.
+
+\[\frac{d}{dt}||\tilde{v}||_0\,||\tilde{v}||_0\leq|\nabla v_2|_{L^{\infty}}||\tilde{v}||_0^2+||\tilde{F}||_0||\tilde{v}||_0\]
+
+Dividim entre $||\tilde{v}||_0$.
+
+\[\frac{d}{dt}||\tilde{v}||_0\leq|\nabla v_2|_{L^{\infty}}||\tilde{v}||_0+||\tilde{F}||_0\]
+
+Ara hi apliquem el lema de Gr\"{o}nwall (lema \ref{Lem: Gronwall}), obtenint
+\[||\tilde{v}||_0\leq||\tilde{v}|_{t=0}||_0\exp\int_0^t|\nabla v_2|_{L^{\infty}}dt+\int_0^t||\tilde{F}||_0\left(\exp\int_s^t|\nabla v_2|_{L^{\infty}}d\tau\right)ds.\]
+
+Com que els integrands s\'{o}n positius, les integrals s\'{o}n creixents i assoliran el seu m\`{a}xim quan s'integrin des de $0$ fins a $T$.
+
+\[||\tilde{v}||_0\leq\left(||\tilde{v}|_{t=0}||_0+\int_0^T||\tilde{F}||_0dt\right)\exp\int_0^T|\nabla v_2|_{L^{\infty}}dt\]
+
+Aix\`{o} ens d\'{o}na precisament la desigualtat de l'enunciat, el que conclou la demostraci\'{o}.
+\end{proof}
+
+\begin{corollari}\label{Cor: unicitat}
+(Unicitat de soluci\'{o}) Siguin $v_1$ i $v_2$ dos solucions llises de quadrat integrable de l'equaci\'{o} \eqref{Equ. Navier-Stokes Majda-Bertozzi} sobre $[0,T]$ amb la mateixa condici\'{o} inicial $v_0$ i la mateixa for\c{c}a $F$. Aleshores $v_1=v_2$.
+\end{corollari}
+\begin{proof}
+Si les condicions inicials s\'{o}n iguals i les forces tamb\'{e}, aleshores $||(v_1-v_2)|_{t=0}||_0=0$, $||F_1-F_2||_0=0$. Per tant, la fita \eqref{Equ. unicitat} de la proposici\'{o} \ref{Pro: unicitat} quedar\`{a} redu\"{i}da a
+\[\sup_{0\leq t\leq T}||v_1-v_2||_0\leq\left[||(v_1-v_2)|_{t=0}||_0+\int_0^T||F_1-F_2||_0dt\right]\exp\left(\int_0^T|\nabla v_2|_{L^{\infty}}dt\right)=0.\]
+
+Per tant tindrem $v_1-v_2=0$, \'{e}s a dir, $v_1=v_2$ i la unicitat queda provada.
+\end{proof}
+
+\subsection{Exist\`{e}ncia global de solucions regularitzades}
+
+En aquest apartat volem provar la exist\`{e}ncia local de solucions de l'equaci\'{o} de Navier-Stokes \eqref{Equ. Navier-Stokes Majda-Bertozzi}. Per simplicitat, traiem el terme $F$. De totes formes, el raonament que farem ser\`{a} totalment an\`{a}leg si tingu\'{e}ssim en compte la for\c{c}a exterior. A m\'{e}s, si el camp de forces \'{e}s conservatiu, la for\c{c}a es pot expressar com un gradient i substituint la pressi\'{o} $p$ per una pressi\'{o} no hidrost\`{a}tica $\pi$ com hem indicat a la definici\'{o} \ref{Def: pressio no hidrostatica}, obtenim una equaci\'{o} sense terme $F$.
+\vspace{3mm}
+
+Per aquest fi, aproximarem l'equaci\'{o} de Navier-Stokes per una equaci\'{o} m\'{e}s suau. Volem aplicar el teorema de Picard, per\`{o} amb ell no podem obtenir exist\`{e}ncia de soluci\'{o} directament de l'equaci\'{o} original, perqu\`{e} involucra operadors que no s\'{o}n Lipschitz. Per aix\`{o} l'aproximarem per una altra equaci\'{o} m\'{e}s regular, que tindr\`{a} l'avantatge que els seus operadors s\'{i} seran fitats, pel qual podrem deduir exist\`{e}ncia de soluci\'{o} d'aquesta equaci\'{o} aproximada. Despr\'{e}s prendrem l\'{i}mit i veurem que aquest l\'{i}mit ser\`{a} precisament soluci\'{o} per l'equaci\'{o} de Navier-Stokes.
+
+Per suavitzar l'equaci\'{o} de Navier-Stokes farem servir l'aproximaci\'{o} de la unitat indicada a l'equaci\'{o} \eqref{Equ. aproximacio unitat}.
+
+L'equaci\'{o} aproximada \'{e}s la seg\"{u}ent:
+\begin{equation}
+\left\{\begin{array}{l}v_t^{\epsilon}+\mathcal{J}_{\epsilon}[(\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})]=-\nabla p^{\epsilon}+\nu\mathcal{J}_{\epsilon}(\mathcal{J}_{\epsilon}\Delta v^{\epsilon}),\\\diver v^{\epsilon}=0,\\v^{\epsilon}|_{t=0}=v_0.\end{array}\right.
+\end{equation}
+
+Aquesta equaci\'{o} \'{e}s sobre $H^s(\mathbb{R}^N)$, de manera que buscar\'{i}em les funcions $v^{\epsilon}\in H^s(\mathbb{R}^N)$ que siguin soluci\'{o} de l'equaci\'{o}. Per\`{o} podem reduir la complexitat projectant aquesta equaci\'{o} sobre l'espai de diverg\`{e}ncia nul\textperiodcentered la $V^s=\{v\in H^s(\mathbb{R}^N)\,|\,\diver v=0\}$, amb el qual ens podem estalviar l'equaci\'{o} $\diver v^{\epsilon}=0$. L'operador que projecta $H^s(\mathbb{R}^N)$ sobre $V^s$ \'{e}s justament la projecci\'{o} de Leray definida en el lema \ref{Lem: Leray original}. L'apliquem a l'equaci\'{o} per projectar-la sobre $V^s$. A l'ap\`{e}ndix \ref{App: apendix} s'enuncien les propietats de commutativitat amb les derivades distribucionals i les aproximacions de la unitat. Amb aix\`{o} obtenim la seg\"{u}ent equaci\'{o}:
+\begin{equation}\label{Equ. Navier-Stokes projectada}
+v_t^{\epsilon}+P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})\big)=\nu\mathcal{J}_{\epsilon}^2\Delta v^{\epsilon}.
+\end{equation}
+
+Ara podem escriure l'equaci\'{o} de Navier-Stokes regularitzada i projectada sobre $V^s$ amb la forma d'una equaci\'{o} diferencial ordin\`{a}ria.
+
+\begin{equation}\label{Equ. EDO projectada}
+\left\{\begin{array}{l}\displaystyle{\frac{dv^{\epsilon}}{dt}=F_{\epsilon}(v^{\epsilon})},\\v^{\epsilon}|_{t=0}=v_0,\end{array}\right.
+\end{equation}
+on
+\begin{equation}
+F_{\epsilon}(v^{\epsilon})=\nu\mathcal{J}_{\epsilon}^2\Delta v^{\epsilon}-P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})\big)=F_{\epsilon}^1(v^{\epsilon})-F_{\epsilon}^2(v^{\epsilon}).
+\end{equation}
+
+Aquesta EDO \'{e}s sobre $V^s$, el qual \'{e}s un espai tancat dins $H^s(\mathbb{R}^N)$. El teorema \ref{Teo: Sobolev s} ens diu que $H^s(\mathbb{R}^N)$ \'{e}s un espai de Banach i conseg\"{u}entment $V^s$ \'{e}s un espai de Banach tamb\'{e}. Volem aplicar el teorema \ref{Teo: Picard} de Picard. S'ha de tenir en compte que aquesta \'{e}s una EDO sobre l'espai de Banach $V^s$, no sobre $\mathbb{R}^N$. Per aix\`{o} necessitarem una versi\'{o} del teorema de Picard per espais de Banach. A m\'{e}s, el camp ser\`{a} $F_{\epsilon}:V^s\rightarrow V^s$ i les solucions seran funcions sobre $t$ de funcions sobre $x$: $[0,T]\rightarrow V^s$.
+
+L'\'{u}nica hip\`{o}tesi per aplicar el teorema de Picard que ens manca \'{e}s que $F_{\epsilon}$ sigui localment Lipschitz. El problema \'{e}s que el teorema de Picard ens dona una soluci\'{o} $v^{\epsilon}$ sobre un interval prou petit que pot dependre de $\epsilon$. Per aix\`{o}, despr\'{e}s utilitzarem el teorema \ref{Teo: Wintner} per garantir que aquestes solucions estan definides sobre un interval que no dep\`{e}n de $\epsilon$.
+
+\begin{proposicio}\label{Pro: existencia suavitzada}
+Sigui $v_0\in V^m$ una condici\'{o} inicial, on $m\in\mathbb{Z}^+\cup\{0\}$. Aleshores:
+\begin{enumerate}
+\item\label{Pro: existencia suavitzada 1} per tot $\epsilon>0$ existeix una \'{u}nica soluci\'{o} $v^{\epsilon}\in C^1([0,T_{\epsilon});V^m)$ per la EDO \eqref{Equ. EDO projectada}, on $T_{\epsilon}$ dep\`{e}n de $||v_0||_m$ i de $\epsilon$;
+\item per tot interval de temps $[0,T]$ sobre el qual $v^{\epsilon}\in C^1([0,T];V^0)$,
+\begin{equation}\label{Equ. fita energia}
+\sup_{0\leq t\leq T}||v^{\epsilon}||_0\leq||v_0||_0.
+\end{equation}
+\end{enumerate}
+\end{proposicio}
+\begin{proof}
+Provem nom\'{e}s la part \ref{Pro: existencia suavitzada 1}. Primer vegem que $F_{\epsilon}$ \'{e}s un operador que va de l'espai de Banach $V^m$ en ell mateix. Sigui $v^{\epsilon}\in V^m$, aleshores per definici\'{o} de $P$, $F_{\epsilon}^2(v^{\epsilon})=P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})\big)\in V^m$, ja que $P$ \'{e}s la projecci\'{o} sobre $V^m$. A m\'{e}s, recordem que es defineix el laplaci\`{a} per funcions vectorials com $\Delta=\nabla\diver-\rot\rot$, de manera que $\diver\Delta=\Delta\diver$. Aix\'{i} doncs, gr\`{a}cies a la commutativitat de les derivades amb l'aproximaci\'{o} de la unitat, $\diver F_{\epsilon}^1(v^{\epsilon})=\diver(\nu\mathcal{J}_{\epsilon}^2\Delta v^{\epsilon})=\nu\mathcal{J}_{\epsilon}^2(\diver\Delta v^{\epsilon})=\nu\mathcal{J}_{\epsilon}^2(\Delta\diver v^{\epsilon})=0$ per ser $v^{\epsilon}\in V^m$. Amb aix\`{o} hem vist que $F_{\epsilon}:V^m\rightarrow V^m$.
+
+Ara veurem que l'operador $F_{\epsilon}$ \'{e}s Lipschitz. Siguin $v^1,v^2\in H^m(\mathbb{R}^N)$. Comencem fitant $||F_{\epsilon}^1(v^1)-F_{\epsilon}^1(v^2)||_m$. Aprofitarem la linealitat de la convoluci\'{o} i del laplaci\`{a}.
+
+\begin{equation}\label{Aeq. mes sumands}
+||\mathcal{J}_{\epsilon}^2\Delta(v^1-v^2)||_m=\left(\sum_{0\leq|\alpha|\leq m}||\mathcal{J}_{\epsilon}^2D^{\alpha}\Delta(v^1-v^2)||_0^2\right)^{1/2}\leq\left(\sum_{0\leq|\alpha|\leq m+2}||\mathcal{J}_{\epsilon}^2D^{\alpha}(v^1-v^2)||_0^2\right)^{1/2}=||\mathcal{J}_{\epsilon}^2(v^1-v^2)||_{m+2},
+\end{equation}
+on la desigualtat \'{e}s deguda a que hi ha m\'{e}s termes al sumatori. Ara recordem la desigualtat \eqref{Equ. desigualtats Sobolev 51} del lema \ref{Lem: desigualtats Sobolev}, la qual farem servir per $k=2$.
+
+\[||F_{\epsilon}^1(v^1)-F_{\epsilon}^1(v^2)||_m=\nu||\mathcal{J}^2\Delta(v^1-v^2)||_m\leq\nu||\mathcal{J}_{\epsilon}^2(v^1-v^2)||_{m+2}\leq\frac{c\nu}{\epsilon^2}||v^1-v^2||_m\]
+
+Anem ara amb $||F_{\epsilon}^2(v^1)-F_{\epsilon}^2(v^2)||_m$. Aprofitarem la linealitat de la projecci\'{o} de Leray.
+
+\[F_{\epsilon}^2(v^1)-F_{\epsilon}^2(v^2)=P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}v^1)\cdot\nabla(\mathcal{J}_{\epsilon}(v^1-v^2))\big)+P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}(v^1-v^2))\cdot\nabla(\mathcal{J}_{\epsilon}v^2)\big)\]
+
+Per l'ortogonalitat de la projecci\'{o} de Leray, tenim en particular que $||Pu||_m\leq||u||_m$ per tot $u\in H^m(\mathbb{R}^N)$. Tamb\'{e} utilitzarem la desigualtat \eqref{Equ. desigualtats Sobolev 51} del lema \ref{Lem: desigualtats Sobolev} amb $k=0$, la desigualtat \eqref{Equ. desigualtats Sobolev 21} del lema \ref{Lem: desigualtats Sobolev} i la commutativitat de la projecci\'{o} de Leray amb l'aproximaci\'{o} de la unitat.
+
+\begin{align*}
+||F_{\epsilon}^2(v^1)-F_{\epsilon}^2(v^2)||_m\leq&\,c||(\mathcal{J}_{\epsilon}v^1)\cdot\nabla(\mathcal{J}_{\epsilon}(v^1-v^2))||_m+||(\mathcal{J}_{\epsilon}(v^1-v^2))\cdot\nabla(\mathcal{J}_{\epsilon}v^2)||_m\\
+\leq&\,c\Big(|\mathcal{J}_{\epsilon}v^1|_{L^{\infty}}||D^m\mathcal{J}_{\epsilon}\nabla(v^1-v^2)||_0+||D^m\mathcal{J}_{\epsilon}v^1||_0|\mathcal{J}_{\epsilon}\nabla(v^1-v^2)|_{L^{\infty}}\\
+&+|\mathcal{J}_{\epsilon}(v^1-v^2)|_{L^{\infty}}||D^m\mathcal{J}_{\epsilon}\nabla v^2||_0+||D^m\mathcal{J}_{\epsilon}(v^1-v^2)||_0|\mathcal{J}_{\epsilon}\nabla v^2|_{L^{\infty}}\Big)
+\end{align*}
+
+Si utilitzem les desigualtats \eqref{Equ. desigualtats Sobolev 51} i \eqref{Equ. desigualtats Sobolev 52} del lema \ref{Lem: desigualtats Sobolev}, podem fitar cadascun dels sumands anteriors. Fem-ne un com a exemple.
+
+\[|\mathcal{J}_{\epsilon}v^1|_{L^{\infty}}||D^m\mathcal{J}_{\epsilon}\nabla(v^1-v^2)||_0\leq c\frac{||v^1||_0}{\epsilon^{N/2}}||\mathcal{J}_{\epsilon}(v^1-v^2)||_{1+m}\leq\frac{c}{\epsilon^{N/2}}||v^1||_0\frac{c}{\epsilon^{1+m}}||v^1-v^2||_0\leq\frac{c}{\epsilon^{N/2+1+m}}||v^1||_0||v^1-v^2||_m\]
+
+De manera an\`{a}loga fitem els altres termes per obtenir
+\[||F_{\epsilon}^2(v^1)-F_{\epsilon}^2(v^2)||_m\leq\frac{c}{\epsilon^{N/2+1+m}}(||v^1||_0+||v^2||_0)||v^1-v^2||_m.\]
+
+Tot plegat, hem vist que
+\begin{equation}\label{Equ. F Lipschitz}
+||F_{\epsilon}(v^1)-F_{\epsilon}(v^2)||_m\leq c||v^1-v^2||_m,
+\end{equation}
+on $c$ \'{e}s una constant que nom\'{e}s dep\`{e}n de $||v^1||_0$, $||v^2||_0$, $\epsilon$ i $N$. Per tant $F_{\epsilon}$ \'{e}s Lipschitz sobre l'obert $O^M=\{v\in V^m\,|\,||v||_m<M\}$, ja que sobre $O^M$ $||v^1||_0\leq||v^1||_m\leq M$ i $||v^2||_0\leq||v^2||_m\leq M$ i per tant $c$ nom\'{e}s dependr\`{a} de $M$, $\epsilon$ i $N$, que estan fixats. Concloem que $F_{\epsilon}$ \'{e}s localment Lipschitz i pel teorema de Picard (teorema \ref{Teo: Picard}), per cada condici\'{o} inicial $v_0\in V^m$, existeix una \'{u}nica soluci\'{o} $v^{\epsilon}\in C^1([0,T_{\epsilon});V^m)$ per algun $T_{\epsilon}>0$.
+\end{proof}
+
+Amb la proposici\'{o} \ref{Pro: existencia suavitzada}, ja estem en condicions de provar el seg\"{u}ent teorema.
+
+\begin{teorema}
+(Exist\`{e}ncia global de solucions regularitzades) Donada una condici\'{o} inicial $v_0\in V^m$ amb $m\in\mathbb{Z}^+\cup\{0\}$, per tot $\epsilon>0$ existeix una \'{u}nica soluci\'{o} $v^{\epsilon}\in C^1([0,\infty);V^m)$ per l'equaci\'{o} regularitzada \eqref{Equ. EDO projectada}.
+\end{teorema}
+\begin{proof}
+Voldrem aplicar el teorema \ref{Teo: Wintner}. Per aix\`{o}, fitarem $||v^{\epsilon}||_m$. Recordem que la EDO que estem resolent \'{e}s \eqref{Equ. EDO projectada}, d'on $\frac{dv^{\epsilon}}{dt}=F_{\epsilon}(v^{\epsilon})$. Recordem tamb\'{e} la desigualtat \eqref{Equ. F Lipschitz} obtinguda a la demostraci\'{o} de la proposici\'{o} \ref{Pro: existencia suavitzada}. Si prenem $v^2=0$, ens queda:
+\[\frac{d}{dt}||v^{\epsilon}(\cdot,t)||_m=\left|\left|\frac{dv^{\epsilon}}{dt}(\cdot,t)\right|\right|_m=||F_{\epsilon}(v^{\epsilon})||_m\leq c||v^{\epsilon}(\cdot,t)||_m,\]
+on $c$ depenia de $||v^{\epsilon}||_0$, $\epsilon$ i $N$.
+
+A m\'{e}s, la proposici\'{o} \ref{Pro: existencia suavitzada} tamb\'{e} ens dona la fita $||v^{\epsilon}||_0\leq||v_0||_0$. Tamb\'{e} recordem que $c$ era creixent amb $||v^{\epsilon}||_0$, amb el qual $c$ deixa de dependre de $||v^{\epsilon}||_0$ per dependre de $||v_0||_0$. Gr\`{a}cies a aix\`{o}, $c$ \'{e}s independent del temps. Ara b\'{e}, pel lema de Gr\"{o}nwall (lema \ref{Lem: Gronwall}), tenim que
+\[||v^{\epsilon}(\cdot,t)||_m\leq||v^{\epsilon}(\cdot,0)||_me^{ct}=||v_0||_me^{ct}\leq||v_0||_me^{cT_{\epsilon}}.\]
+
+Si $T_{\epsilon}$ \'{e}s finit, hem aconseguit una fita de $||v^{\epsilon}(\cdot,t)||_m$ que no dep\`{e}n del temps. Per tant, $v^{\epsilon}$ no pot tendir a la vora de $V^m$ per cap $t\to T$ i pel teorema \ref{Teo: Wintner}, la soluci\'{o} $v^{\epsilon}$ es pot perllongar per tot temps $t\in[0,\infty)$.
+\end{proof}
+
+\subsection{Exist\`{e}ncia local de solucions}
+
+Hem vist a l'apartat anterior que l'equaci\'{o} de Navier-Stokes regularitzada \eqref{Equ. Navier-Stokes projectada} t\'{e} soluci\'{o} $v^{\epsilon}$ i a m\'{e}s definida per tot temps. Ara volem trobar una soluci\'{o} per l'equaci\'{o} de Navier-Stoles original \eqref{Equ. Navier-Stokes Majda-Bertozzi}, la qual s'obtindr\`{a} del l\'{i}mit de $v^{\epsilon}$ quan $\epsilon\to0$. Fent aix\`{o}, per\`{o}, obtindrem una soluci\'{o} $v$ que estar\`{a} definida nom\'{e}s per un interval $[0,T]$.
+
+\begin{proposicio}
+Donada una condici\'{o} inicial $v_0\in V^m$, la soluci\'{o} regularitzada $v^{\epsilon}\in C^1([0,\infty);V^m)$ compleix la seg\"{u}ent fita d'energia:
+\begin{equation}\label{Equ. limit aleatori}
+\frac{d}{dt}\frac{1}{2}||v^{\epsilon}||_m^2+\nu||\mathcal{J}_{\epsilon}\nabla v^{\epsilon}||_m^2\leq c_m|\nabla\mathcal{J}_{\epsilon}v^{\epsilon}|_{L^{\infty}}||v^{\epsilon}||_m^2.
+\end{equation}
+\end{proposicio}
+
+\begin{teorema}\label{Teo: existencia}
+(Exist\`{e}ncia local de solucions) Sigui $v_0\in V^m$ una condici\'{o} inicial amb $m\geq\left[\frac{N}{2}\right]+2$, on $\left[\frac{N}{2}\right]$ \'{e}s la part entera de $\frac{N}{2}$.
+\begin{enumerate}
+\item Per tot temps $T>0$ amb la fita
+\begin{equation}\label{Equ. existencia 1}
+T<\frac{1}{c_m||v_0||_m},
+\end{equation}
+i per tota viscositat $0\leq\nu<\infty$ existeix una \'{u}nica soluci\'{o} $v^{\nu}\in C([0,T];C^2(\mathbb{R}^3))\cap C^1([0,T];C(\mathbb{R}^3))$ per l'equaci\'{o} de Navier-Stokes. De fet, aquesta soluci\'{o} $v^{\nu}$ \'{e}s l\'{i}mit d'una successi\'{o} parcial de $v^{\epsilon}$.
+\item Les solucions $v^{\epsilon}$ i $v^{\nu}$ compleixen les seg\"{u}ents fites d'energia:
+\begin{equation}
+\sup_{0\leq t\leq T}||v^{\epsilon}||_m\leq\frac{||v_0||_m}{1-c_mT||v_0||_m},
+\end{equation}
+\begin{equation}
+\sup_{0\leq t\leq T}||v^{\nu}||_m\leq\frac{||v_0||_m}{1-c_mT||v_0||_m}.
+\end{equation}
+\item Les solucions $v^{\epsilon}$ i $v^{\nu}$ s\'{o}n uniformement fitades als espais $L^{\infty}([0,T],H^m(\mathbb{R}^3))$, $\Lip([0,T];H^{m-2}(\mathbb{R}^3))$ i\\
+$C_W([0,T];H^m(\mathbb{R}^3))$. Uniformement vol dir que les seves fites no depenen de $\epsilon$ ni de $\nu$.
+\end{enumerate}
+\end{teorema}
+\begin{proof}
+De la fita d'energia \eqref{Equ. limit aleatori} tenim:
+\[||v^{\epsilon}||_m\frac{d}{dt}||v^{\epsilon}||_m\leq\frac{d}{dt}\frac{1}{2}||v^{\epsilon}||_m^2\leq\frac{d}{dt}\frac{1}{2}||v^{\epsilon}||_m^2+\nu||\mathcal{J}_{\epsilon}\nabla v^{\epsilon}||_m^2\leq c_m|\nabla\mathcal{J}_{\epsilon}v^{\epsilon}|_{L^{\infty}}||v^{\epsilon}||_m^2.\]
+
+Ara podem utilitzar la desigualtat \eqref{Equ. desigualtats Sobolev 1} amb $k=0$ i $s=m-1$ gr\`{a}cies a la hip\`{o}tesi que hem fet $m\geq\left[\frac{N}{2}\right]+2$, per la qual $s=m-1\geq\left[\frac{N}{2}\right]+1>\frac{N}{2}$ i es compleix la hip\`{o}tesi de l'apartat \ref{Lem: desigualtats Sobolev 1} del lema \ref{Lem: desigualtats Sobolev}. Tenim en compte que per funcions cont\'{i}nues $|\cdot|_{L^{\infty}}=|\cdot|_{C^0}$. Tamb\'{e} utilitzem la desigualtat \eqref{Equ. desigualtats Sobolev 51} amb $k=0$.
+
+\[|\nabla\mathcal{J}_{\epsilon}v^{\epsilon}|_{L^{\infty}}\leq c||\nabla\mathcal{J}_{\epsilon}v^{\epsilon}||_{m-1}=c||\mathcal{J}_{\epsilon}\nabla v^{\epsilon}||_{m-1}\leq c_m||\nabla v^{\epsilon}||_{m-1}\]
+
+Per un raonament semblant al de la desigualtat \eqref{Aeq. mes sumands}, tenim que
+\[||\nabla v^{\epsilon}||_{m-1}\leq c_m||v^{\epsilon}||_m.\]
+
+Tot plegat, hem vist la seg\"{u}ent fita de la derivada temporal de $||v^{\epsilon}||_m$:
+\[\frac{d}{dt}||v^{\epsilon}||_m\leq c_m|\nabla\mathcal{J}_{\epsilon}v^{\epsilon}|_{L^{\infty}}||v^{\epsilon}||_m^2\leq c_m||v^{\epsilon}||_m^2,\]
+on $c_m$ no dep\`{e}n de $\epsilon$. D'aquesta desigualtat es pot deduir la seg\"{u}ent:
+\[\frac{1}{||v^{\epsilon}||_m^2}\frac{d}{dt}||v^{\epsilon}||_m\leq c_m\]
+
+Si integrem ambd\'{o}s membres, la monotonia de la integral definida ens garanteix que es mant\'{e} la desigualtat.
+
+\[\int_0^t\frac{1}{||v^{\epsilon}(\cdot,s)||_m^2}\frac{d}{ds}||v^{\epsilon}(\cdot,s)||_mds=\left[-\frac{1}{||v^{\epsilon}(\cdot,s)||_m}\right]_0^t=\frac{1}{||v_0||_m}-\frac{1}{||v^{\epsilon}(\cdot,t)||_m}\leq c_mt\]
+
+A\"{i}llant $||v^{\epsilon}||_m$, obtenim
+\[||v^{\epsilon}||_m\leq\frac{||v_0||_m}{1-c_mt||v_0||_m}\]
+
+\[\sup_{0\leq t\leq T}||v^{\epsilon}||_m\leq\frac{||v_0||_m}{1-c_mT||v_0||_m}\]
+
+Hem provat una de les fites d'energia que dona el teorema. A m\'{e}s observem que aquesta fita no dep\`{e}n de $\epsilon$. Per tant $||v_{\epsilon}||$ est\`{a} fitat uniformement en $C([0,T];H^m)$ en cas que $T<(c_m||v_0||_m)^{-1}$.
+
+\begin{lema}
+La fam\'{i}lia de solucions $v^{\epsilon}$ forma una successi\'{o} de Cauchy sobre $C([0,T];L^2(\mathbb{R}^3))$. M\'{e}s concretament, existeix una constant $C$ depenent nom\'{e}s de $||v_0||_m$ i $T$ tal que per tots $\epsilon,\epsilon'$
+\[\sup_{0\leq t\leq T}||v^{\epsilon}-v^{\epsilon'}||_0\leq C\max\{\epsilon,\epsilon'\}.\]
+\end{lema}
+
+Com que $L^2(\mathbb{R}^3)$ \'{e}s un espai de Banach, aquest lema, que no demostrarem, implica que existeix una $v\in L^2(\mathbb{R}^3)$ tal que $v^{\epsilon}$ convergeix fortament a $v$ quan $\epsilon\to0$ sobre $L^2(\mathbb{R}^3)$. De fet la converg\`{e}ncia que dona el lema \'{e}s lineal amb $\epsilon$:
+\[\sup_{0\leq t\leq T}||v^{\epsilon}-v||_0\leq C\epsilon.\]
+
+Ara volem una converg\`{e}ncia no nom\'{e}s sobre $L^2(\mathbb{R}^3)$, sin\'{o} sobre els espais de S\'{o}bolev. Per all\`{o} primer fitem $||v||_m$. Hem vist que $||v^{\epsilon}||_m$ est\`{a} uniformement fitada. Per la proposici\'{o} \ref{Pro: Alaoglu} t\'{e} una successi\'{o} parcial $v^{\epsilon_k}$ convergent feblement a $H^m(\mathbb{R}^N)$. Per unicitat del l\'{i}mit, $v^{\epsilon_k}\rightharpoonup v$. La definici\'{o} de topologia feble implica que $||v^{\epsilon_k}||_m\xrightarrow[k\to\infty]{}||v||_m$ i per tant tenim la fita que vol\'{i}em:
+\[\sup_{0\leq t\leq T}||v||_m\leq\frac{||v_0||_m}{1-c_mT||v_0||_m}.\]
+
+Ara, aprofitant la desigualtat \eqref{Equ. desigualtats Sobolev 4}, per tot $0<m'<m$ tenim
+
+\[||v^{\epsilon}-v||_{m'}\leq C||v^{\epsilon}-v||_0^{1-m'/m}||v^{\epsilon}-v||_m^{m'/m}\leq C\epsilon^{1-m'/m}(||v^{\epsilon}||_m+||v||_m)^{m'/m}\leq C\epsilon^{1-m'/m}\left(\frac{2||v_0||_m}{1-c_mT||v_0||_m}\right)^{m'/m}.\]
+
+Per tant per tot $m'<m$ tindrem converg\`{e}ncia forta $v^{\epsilon}\xrightarrow[\epsilon\to0]{}v$ a $C([0,T];H^{m'}(\mathbb{R}^3))$. En particular, si $\frac{7}{2}<m'<m$, tenim converg\`{e}ncia forta a $C([0,T];C^2(\mathbb{R}^3))$. Aix\`{o} \'{e}s perqu\`{e} la desigualtat \eqref{Equ. desigualtats Sobolev 1} per $k=2$ i $m'=s+k>\frac{N}{2}+2=\frac{7}{2}$ implica que
+\[|v^{\epsilon}-v|_{C^2}\leq c||v^{\epsilon}-v||_{m'}\xrightarrow[\epsilon\to0]{}0.\]
+
+Per definici\'{o} de la EDO de Navier-Stokes regularitzada,
+\[v_t^{\epsilon}=\nu\mathcal{J}_{\epsilon}^2\Delta v^{\epsilon}-P\mathcal{J}_{\epsilon}((\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})).\]
+
+Gr\`{a}cies a la converg\`{e}ncia de $v^{\epsilon}\xrightarrow[\epsilon\to0]{}v$ a $C([0,T];C^2(\mathbb{R}^3))$, les derivades de primer i segon ordre de $v^{\epsilon}$ convergeixen a les respectives derivades de $v$. Per aix\`{o} i pel teorema \ref{Teo: successio suavitzada}, tenim que $v_t^{\epsilon}\xrightarrow[\epsilon\to0]{}\nu\Delta v-P(v\cdot\nabla v)$. Per altra part, com que tenim converg\`{e}ncia forta $v^{\epsilon}\xrightarrow[\epsilon\to0]{}v$, el l\'{i}mit distribucional de $v_t^{\epsilon}$ \'{e}s $v_t$ i per unicitat del l\'{i}mit,
+\[v_t=\nu\Delta v-P(v\cdot\nabla v).\]
+
+Acabem de veure que la funci\'{o} $v$ que hav\'{i}em obtingut \'{e}s efectivament soluci\'{o} de l'equaci\'{o} de Navier-Stokes.
+\end{proof}
+
+El seg\"{u}ent teorema ens donar\`{a} m\'{e}s regularitat de les solucions.
+
+\begin{teorema}
+Si $v^{\nu}$ \'{e}s la soluci\'{o} esmentada al teorema \ref{Teo: existencia}, aleshores:
+\[v^{\nu}\in C([0,T);V^m)\cap C^1([0,T);V^{m-2})\]
+\end{teorema}
+
+\begin{corollari}\label{Cor: existencia global}
+Donada una condici\'{o} inicial $v_0\in V^m$, amb $m\geq\left[\frac{N}{2}\right]+2$, aleshores per qualsevol viscositat $\nu\geq0$ existeix un temps maximal $T^*$ d'exist\`{e}ncia (que pot ser infinit) i una soluci\'{o} \'{u}nica $v^{\nu}\in C([0,T^*);V^m)\cap C^1([0,T^*);V^{m-2})$ per l'equaci\'{o} de Navier-Stokes. A m\'{e}s, si $T^*$ \'{e}s finit, aleshores s'ha de complir que $\lim_{t\to T^*}||v^{\nu}(\cdot,t)||_m=\infty$.
+\end{corollari}
+\begin{proof}
+Sigui $T^*=\sup\{T>0\,|\,\text{existeix una soluci\'{o} }v\in C([0,T);V^m)\cap C^1([0,T);V^{m-2})\}$. Per unicitat de soluci\'{o}, podem empalmar les solucions per construir una soluci\'{o} $v^{\nu}\in C([0,T^*);V^m)\cap C^1([0,T^*);V^{m-2})$.
+
+Ara volem demostrar que si $T^*$ \'{e}s finit, llavors tenim que $\lim_{t\to T^*}||v^{\nu}(\cdot,t)||_m=\infty$. Fem-ho per reducci\'{o} a l'absurd. Suposem que $T^*$ \'{e}s finit i que $\lim_{t\to T^*}||v^{\nu}(\cdot,t)||_m\neq\infty$ i arribarem a una contradicci\'{o} trobant una soluci\'{o} definida a $[0,T]$ per un cert $T>T^*$.
+
+$\lim_{t\to T^*}||v^{\nu}(\cdot,t)||_m\neq\infty$ implica que hi ha una successi\'{o} $T_n\xrightarrow[n\to\infty]{}T^*$ per la qual existeix un $C>0$ tal que per tot $n\geq1$, $||v^{\nu}(\cdot,T_n)||_m\leq C$.
+
+Sigui
+\[\epsilon=\frac{1}{2c_mC},\]
+on $c_m$ \'{e}s la constant que apareix a la desigualtat \eqref{Equ. existencia 1}. Ten\'{i}em que $T_n\xrightarrow[n\to\infty]{}T^*$ i, en particular, per aquest $\epsilon$ existeix un $n\geq1$ tal que $T^*-T_n<\epsilon$, \'{e}s a dir, $T_n>T^*-\epsilon$.
+
+Recordem que al teorema \ref{Teo: existencia} hav\'{i}em vist que per qualsevol
+\[T<\frac{1}{c_m||v_0||_m}\]
+existia una soluci\'{o} definida sobre $[0,T]$ amb condici\'{o} inicial $v_0$. Ara volem proposar com a condici\'{o} inicial $v(\cdot,T_n)$. Llavors per
+\[T=\frac{1}{c_m||v(\cdot,T_n)||_m}-\epsilon\]
+tenim una soluci\'{o} definida sobre $[0,T]$ amb condici\'{o} inicial $v(\cdot,T_n)$. Amb aquesta nova soluci\'{o}, podem estendre la nostra antiga soluci\'{o} a una soluci\'{o} definida sobre $[0,T_n+T]$ i amb condici\'{o} inicial $v_0$.
+
+\[T_n+T>T^*-\epsilon+\frac{1}{c_m||v(\cdot,T_n)||_m}-\epsilon\geq T^*-\frac{1}{2c_mC}+\frac{1}{c_mC}-\frac{1}{2c_mC}=T^*\]
+
+Hem arribat a la contradicci\'{o} que vol\'{i}em. Hav\'{i}em suposat que la soluci\'{o} maximal estava definida fins $T^*$ i hem pogut estendre-la m\'{e}s enll\`{a} de $T^*$.
+\end{proof}
+
+Aquest corol\textperiodcentered lari \'{e}s molt \'{u}til perqu\`{e} ens permetr\`{a} estendre les solucions a tot temps en cas que trobem una fita de $||v||_m$ quan $t\to T^*$. Aix\`{o} \'{e}s especialment rellevant perqu\`{e} a l'apartat \ref{Sse: existencia global} demostrarem que aquesta fita sempre es compleix per fluids bidimensionals.
+
+\subsection{Unicitat i exist\`{e}ncia local per fluids bidimensionals}
+
+Per fer l'argument exposat als anteriors apartats hem hagut de suposar que les solucions decreixen prou r\`{a}pid a l'infinit per pert\`{a}nyer a $L^2(\mathbb{R}^N)$. Aquesta hip\`{o}tesi \'{e}s molt raonable per $N=3$, per\`{o} quan $N=2$, \'{e}s massa forta i pocs fluids la compleixen. De fet la seg\"{u}ent proposici\'{o} ens diu quins fluids bidimensionals la compleixen.
+
+\begin{proposicio}
+Sigui $v$ la velocitat d'un fluid incompressible bidimensional que t\'{e} vorticitat de suport compacte. Aleshores:
+\[\int_{\mathbb{R}^2}|v|^2dx<\infty\Longleftrightarrow\int_{\mathbb{R}^2}\omega\,dx=0.\]
+\end{proposicio}
+
+Com ens podem imaginar, hi ha molts fluids que no compleixen la condici\'{o} de vorticitat total nul\textperiodcentered la, \emph{v. gr.}, els fluids pels quals la vorticitat t\'{e} signe constant. \'{E}s per aix\`{o} que hem de trobar alguna manera de poder seguir el mateix esquema dels arguments. M\'{e}s concretament, descompondrem la velocitat en dos termes: un que s\'{i} tindr\`{a} energia finita i un altre que tindr\`{a} simetria radial.
+
+\begin{definicio}
+Es diu que un camp de velocitat incompressible i llis $v$ sobre $\mathbb{R}^2$ t\'{e} \textbf{descomposici\'{o} de energia radial} quan existeix una vorticitat llisa amb simetria radial $\overline\omega$ tal que
+\[v(x)=u(x)+\overline v(x),\]
+\[\int|u(x)|^2dx<\infty,\hspace{5mm}\diver u=0,\]
+on $\overline v$ es defineix a partir de $\overline\omega$ mitjan\c{c}ant la llei de Biot-Savart
+\[\overline v(x)=\frac{1}{|x|^2}(-x_2,x_1)\int_0^{|x|}s\overline\omega(s)ds.\]
+\end{definicio}
+
+De fet, la part radial $\overline v$ de la descomposici\'{o} de $v$ \'{e}s precisament la soluci\'{o} de l'equaci\'{o} de Navier-Stokes amb vorticitat inicial radial $\overline\omega_0$. \'{E}s el v\`{o}rtex de l'equaci\'{o} \eqref{Equ. Biot-Savart temporal}. L'equaci\'{o} \eqref{Equ. calor} mostra com es calcula la vorticitat en cas que la vorticitat inicial sigui radial, \'{e}s a dir, permet calcular $\overline\omega$ a partir de $\overline\omega_0$.
+
+S'ha de fer l'apreciaci\'{o} que la descomposici\'{o} d'energia radial no \'{e}s \'{u}nica. Es poden obtenir diferents descomposicions prenent diferents funcions $\overline\omega$. No obstant aix\`{o}, quan estudiem un cas estacionari ---en el que les variables no depenen del temps---, la relaci\'{o}
+\[\int_{\mathbb{R}^2}\omega(x,t)dx=\int_{\mathbb{R}^2}\omega(x,0)dx\]
+indica que la part radial $\overline\omega$ ve determinada pel seu valor inicial. Tamb\'{e} cal destacar que la descomposici\'{o} d'energia radial no \'{e}s pas una descomposici\'{o} ortogonal.
+
+\begin{lema}
+Tot camp de velocitat incompressible i llis amb
+\[\omega=\rot v\in L^1(\mathbb{R}^2)\]
+t\'{e} descomposici\'{o} d'energia radial.
+\end{lema}
+
+Gr\`{a}cies a aquest lema, sempre que tenim un fluid incompressible amb velocitat llisa, podrem descompondre la velocitat en una part d'energia finita i una part radial. Utilitzarem aquesta descomposici\'{o} per obtenir un resultat an\`{a}leg a la proposici\'{o} \ref{Pro: unicitat}.
+
+%Primer tenim un resultat que ens mostra la soluci\'{o} expl\'{i}cita de l'equaci\'{o} de Navier-Stokes quan la vorticitat inicial t\'{e} simetria radial. El fluid es coneix amb el nom de remol\'{i} visc\'{o}s ---o no visc\'{o}s en el cas $\nu=0$--- perqu\`{e} la velocitat descriu un remol\'{i} al voltant de l'origen.
+%
+%\begin{proposicio}
+%La soluci\'{o} a l'equaci\'{o} de Navier-Stokes donada una condici\'{o} inicial amb vorticitat sim\`{e}trica radialment $\omega_0(r)$ \'{e}s:
+%\begin{equation}
+%\omega(x,t)=\frac{1}{4\pi\nu t}\int_{\mathbb{R}^2}e^{\frac{|x-y|^2}{4\nu t}}\omega_0(|y|)dy,
+%\end{equation}
+%\begin{equation}
+%v(x,t)=\frac{1}{r^2}(-x_2,x_1)\int_0^rs\omega(s,t)ds,
+%\end{equation}
+%on $r=|x|$ i hem escrit indistintament $\omega(x,t)=\omega(s,t)$, ja que t\'{e} simetria radial.
+%\end{proposicio}
+%
+\begin{proposicio}
+Siguin $v_1,v_2$ dues solucions llises de diverg\`{e}ncia nul\textperiodcentered la de l'equaci\'{o} de Navier-Stokes bidimensional amb forces $F_1,F_2$ i pressions $p_1,p_2$. Escrivim les descomposicions d'energia radial $v_i(x,t)=u_i(x,t)+\overline v_i(x)$. Aleshores tenim la seg\"{u}ent fita d'energia:
+\begin{equation}
+\begin{split}
+\sup_{0\leq t\leq T}&||u_1-u_2||_0\leq||(u_1-u_2)(\cdot,0)||_0\\
+&+e^{\int_0^T(|\nabla u_2|_{L^{\infty}}+|\nabla\overline v_1|_{L^{\infty}})dt}\int_0^T\big(||(F_1-F_2)(\cdot,t)||_0+|\overline v_1-\overline v_2|_{L^{\infty}}||\nabla u_2(\cdot,t)||_0+|\nabla\overline v_1-\nabla\overline v_2|_{L^{\infty}}||u_2(\cdot,t)||_0\big)dt.
+\end{split}
+\end{equation}
+\end{proposicio}
+\begin{proof}
+La demostraci\'{o} \'{e}s an\`{a}loga a la demostraci\'{o} de la proposici\'{o} \ref{Pro: unicitat}. Comencem recordant que $v_i$ compleix per definici\'{o} l'equaci\'{o} de Navier-Stokes.
+
+\[\frac{\partial v_i}{\partial t}+v_i\cdot\nabla v_i=-\nabla p+\nu\Delta v_i+F\]
+
+Ara volem trobar una expressi\'{o} semblant per $u_i=v_i-\overline v_i$. Substitu\"{i}m $v_i$ per la seva descomposici\'{o} a l'expressi\'{o} anterior.
+
+\[\frac{\partial u_i}{\partial t}+\frac{\partial\overline v_i}{\partial t}+u_i\cdot\nabla u_i+u_i\cdot\nabla\overline v_i+\overline v_i\cdot\nabla u_i+\overline v_i\cdot\nabla\overline v_i=-\nabla p+\nu\Delta u_i+\nu\Delta\overline v_i+F\]
+
+Recordem que $\frac{\partial\overline v_i}{\partial t}+\overline v_i\cdot\nabla\overline v_i=\nu\Delta\overline v_i$ per ser $\overline v_i$ una soluci\'{o} de l'equaci\'{o} de Navier-Stokes. Per tant, l'expressi\'{o} anterior ens queda aix\'{i}:
+\[\frac{\partial u_i}{\partial t}+u_i\cdot\nabla u_i+u_i\cdot\nabla\overline v_i+\overline v_i\cdot\nabla u_i=-\nabla p+\nu\Delta u_i+F\]
+
+Escrivim $\tilde u=u_1-u_2$, $\tilde{\overline v}=\overline v_1-\overline v_2$, $\tilde F=F_1-F_2$ i $\tilde p=p_1-p_2$. Obtenim aix\'{i}:
+
+\[\frac{\partial\tilde u}{\partial t}+u_1\cdot\nabla\tilde u+\tilde u\cdot\nabla u_2+\overline v_1\cdot\nabla\tilde u+\tilde{\overline v}\cdot\nabla u_2+\tilde u\cdot\nabla\overline v_1+u_2\cdot\nabla\tilde{\overline v}=-\nabla\tilde p+\nu\Delta\tilde u+\tilde F.\]
+
+A partir d'aqu\'{i} se segueix el mateix argument d'integraci\'{o} per parts que s'ha fet a la proposici\'{o} \ref{Pro: unicitat} per deduir la fita
+\[\frac{d}{dt}\frac{1}{2}||\tilde u||_0^2+\nu||\tilde u||_0^2\leq||\tilde u||_0\Big(||\tilde u||_0(|\nabla u_2|_{L^{\infty}}+|\nabla\overline v_1|_{L^{\infty}})+|\nabla\tilde{\overline v}|_{L^{\infty}}||u_2||_0+||\tilde F||_0+|\tilde{\overline v}|_{L^{\infty}}||\nabla u_2||_0\Big).\]
+
+Aplicant el lema de Gr\"{o}nwall s'obtenen les fites d'energia descrites a l'enunciat d'aquesta proposici\'{o}.
+\end{proof}
+
+Com al corol\textperiodcentered lari \ref{Cor: unicitat}, aquesta proposici\'{o} implica la unicitat de soluci\'{o} de l'equaci\'{o} de Navier-Stokes en el cas bidimensional.
+
+Per l'exist\`{e}ncia de solucions en dues dimensions tenim el mateix problema que per la unicitat: hem fet un argument que requereix energia finita ($v\in L^2(\mathbb{R}^2)$), per\`{o} pocs fluids bidimensionals compleixen aquest requeriment. Per all\`{o} tornem a fer servir la descomposici\'{o} d'energia radial i repassem les idees dels arguments exposats a les seccions anteriors, per\`{o} les aplicarem a aquesta descomposici\'{o}.
+
+Primer comencem per recordar l'equaci\'{o} diferencial que compleix $u$, que ser\`{a} l'equaci\'{o} diferencial a <<resoldre>>:
+\[\frac{\partial u}{\partial t}+u\cdot\nabla u+\overline v\cdot\nabla u+u\cdot\nabla\overline v=-\nabla p+\nu\Delta u.\]
+
+La regularitzem mitjan\c{c}ant les aproximacions de la unitat $\mathcal{J}_{\epsilon}$ per $\epsilon>0$ i les projectem mitjan\c{c}ant la projecci\'{o} de Leray $P$ sobre l'espai $V^s=\{u\in H^s(\mathbb{R}^2)\,|\,\diver u=0\}$.
+
+\begin{equation}\label{Equ. Navier-Stokes suau 2D}
+\frac{\partial u^{\epsilon}}{\partial t}+P\Big(\mathcal{J}_{\epsilon}((\mathcal{J}_{\epsilon}u^{\epsilon})\cdot\nabla\mathcal{J}_{\epsilon}u^{\epsilon})+\mathcal{J}_{\epsilon}(\overline v\cdot\nabla\mathcal{J}_{\epsilon}u^{\epsilon})+\mathcal{J}_{\epsilon}((\mathcal{J}_{\epsilon}u^{\epsilon})\cdot\nabla\overline v)\Big)=\nu\mathcal{J}_{\epsilon}^2\Delta u^{\epsilon}
+\end{equation}
+
+Passem a enunciar les proposicions i els teoremes que garanteixen l'exist\`{e}ncia de solucions en dues dimensions. No farem les demostracions, ja que segueixen el mateix procediment que en el cas d'energia finita, per\`{o} aplicat a la descomposici\'{o} d'energia radial. Les fites que ten\'{i}em de l'energia de $v$, ara hauran de ser fites de l'energia de $u$, ja que $v$ tindr\`{a} energia infinita.
+
+\begin{proposicio}
+Sigui $v_0(x)$ una velocitat inicial bidimensional i $u_0(x)+\overline v_0(x)$ la seva descomposici\'{o} d'energia radial, on $u_0\in V^m(\mathbb{R}^2)$, $m\in\mathbb{Z}^+\cup\{0\}$ i essent $\overline v_0(x)$ una funci\'{o} llisa.
+\begin{enumerate}
+\item Per tot $\epsilon>0$ existeix una \'{u}nica soluci\'{o} $u^{\epsilon}\in C^1([0,T_{\epsilon});V^m)$ per la EDO \eqref{Equ. Navier-Stokes suau 2D}, on $T_{\epsilon}$ dep\`{e}n de $||u_0||_m$ i $\epsilon$.
+\item Per tot interval $[0,T]$ pel qual la soluci\'{o} $u^{\epsilon}$ pertany a $C^1([0,T];V^0)$,
+\begin{equation}\label{Equ. fita energia 2D}
+\sup_{0\leq t\leq T}||u^{\epsilon}(\cdot,t)||_0\leq||u^{\epsilon}(\cdot,0)||_0\left(\exp\int_0^T||\nabla\overline v||_{L^{\infty}}dt\right).
+\end{equation}
+\end{enumerate}
+\end{proposicio}
+
+Hi ha un punt a destacar en aquesta proposici\'{o}, i es que hem donat una fita de l'energia \eqref{Equ. fita energia 2D} que dep\`{e}n de $T$, a difer\`{e}ncia de la fita d'energia que vam donar \eqref{Equ. fita energia}, que no depenia de $T$. Aix\`{o} succeeix perqu\`{e} ara tenim un altre terme: la part radial $\overline v$, que cedeix una energia a $u$ que dep\`{e}n del temps.
+
+\begin{teorema}
+Sigui $v_0(x)$ una velocitat inicial bidimensional i $u_0(x)+\overline v_0(x)$ la seva descomposici\'{o} d'energia radial, on $u_0\in V^m(\mathbb{R}^2)$, $m\in\mathbb{Z}^+\cup\{0\}$ i essent $\overline v_0(x)$ una funci\'{o} llisa. Aleshores per tot $\epsilon$ existeix  una \'{u}nica soluci\'{o} $u^{\epsilon}\in C^1([0,\infty);V^m)$ per l'equaci\'{o} regularitzada \eqref{Equ. Navier-Stokes suau 2D}. La soluci\'{o} $u^{\epsilon}$ est\`{a} definida per tot temps.
+\end{teorema}
+
+\begin{proposicio}
+Donats $u_0\in V^m$, $m\in\mathbb{Z}^+\cup\{0\}$ la soluci\'{o} regularitzada $u^{\epsilon}\in C^1([0,T_{\epsilon});V^m)$ per l'equaci\'{o} \eqref{Equ. Navier-Stokes suau 2D} satisf\`{a}
+\[\frac{d}{dt}||u^{\epsilon}||_m\leq c_m\big(|\nabla\mathcal{J}_{\epsilon}u^{\epsilon}|_{L^{\infty}}+|\nabla\overline v(x)|_{L^{\infty}}\big)||u^{\epsilon}||_m.\]
+\end{proposicio}
+
+A l'igual que en l'apartat anterior, d'aquesta proposici\'{o} traiem una fita $M$ independent de $\epsilon$ tal que
+\[||u^{\epsilon}(\cdot,t)||_m\leq M.\]
+
+Amb aquesta fita se segueix el pas al l\'{i}mit $\epsilon\to0$ com a l'apartat anterior, amb el qual obtenim exist\`{e}ncia local de solucions per l'equaci\'{o} de Navier-Stokes en dues dimensions.
+
+\subsection{Exist\`{e}ncia global per fluids bidimensionals}\label{Sse: existencia global}
+
+A les seccions anteriors hem vist que, donada una condici\'{o} inicial, l'equaci\'{o} de Navier-Stokes t\'{e} una \'{u}nica soluci\'{o} que est\`{a} definida fins un cert $T$. Tamb\'{e} hem vist que si $||v||_m$ estava fitada, aleshores la soluci\'{o} estava definida per tot temps. En aquesta secci\'{o} veurem que $||v||_m$ es pot controlar per $|\omega|_{L^{\infty}}$ i per tant fitant la norma de la vorticitat, aconseguirem fitar $||v||_m$ i amb aix\`{o} les solucions estaran definides globalment. En particular, tots els fluids bidimensionals tindran $\omega$ fitada.
+
+La seg\"{u}ent proposici\'{o}, que no demostrarem, ens donar\`{a} una fita del gradient de $v$, la qual podrem utilitzar per demostrar el teorema seg\"{u}ent.
+
+\begin{proposicio}\label{Pro: limit gradient}
+Sigui $v\in L^2(\mathbb{R}^N)\cap L^{\infty}(\mathbb{R}^N)$ un camp de velocitats llis de diverg\`{e}ncia nul\textperiodcentered la i sigui $\omega=\rot v$. Aleshores
+\begin{equation}\label{Equ. limit gradient}
+|\nabla v|_{L^{\infty}}\leq c(1+\log^+||v||_3+\log^+||\omega||_0)(1+|\omega|_{L^{\infty}}),
+\end{equation}
+on $\log^+x$ es defineix com el logaritme neperi\`{a} $\log x$ si $x>1$ i com $0$ si $x\leq1$.
+\end{proposicio}
+
+\'{E}s remarcable observar que la fita donada per aquesta proposici\'{o} no dep\`{e}n expl\'{i}citament del temps.
+
+El seg\"{u}ent teorema ens dona una condici\'{o} suficient per l'exist\`{e}ncia global de solucions per fluids generals, no nom\'{e}s per fluids en dues dimensions. El que passar\`{a} \'{e}s que els fluids bidimensionals sempre compliran les hip\`{o}tesis del teorema.
+
+\begin{teorema}\label{Teo: existencia global}
+Sigui $v_0\in V^m$ amb $m\geq\frac{N}{2}+2$ una velocitat inicial per la qual existeix una soluci\'{o} $v\in C^1([0,T);C^2\cap V^m)$ per l'equaci\'{o} de Navier-Stokes.
+\begin{enumerate}
+\item Si existeix un $M_1>0$ tal que per tot $T>0$ la vorticitat satisf\`{a}
+\begin{equation}
+\int_0^T|\omega(\cdot,\tau)|_{L^{\infty}}d\tau\leq M_1,
+\end{equation}
+aleshores la soluci\'{o} $v$ existeix per tot temps: $v\in C^1([0,\infty);C^2\cap V^m)$.
+\item Si el temps maximal $T$ d'exist\`{e}ncia de solucions $v\in C^1([0,T);C^2\cap V^m)$ \'{e}s finit, aleshores necess\`{a}riament
+\[\lim_{t\to T}\int_0^t|\omega(\cdot,\tau)|_{L^{\infty}}d\tau=\infty.\]
+\end{enumerate}
+\end{teorema}
+\begin{proof}
+Farem la prova pel cas de tres dimensions, per\`{o} es pot fer tamb\'{e} una prova an\`{a}loga pel cas de dues dimensions utilitzant la descomposici\'{o} d'energia radial.
+
+De la fita \eqref{Equ. limit aleatori} que ten\'{i}em per les solucions regularitzades, fent tendir $\epsilon$ cap a $0$, podem deduir la seg\"{u}ent fita:
+\[\frac{d}{dt}||v||_m\leq c_m|\nabla v|_{L^{\infty}}||v||_m.\]
+
+Ara hi apliquem el lema de Gr\"{o}nwall (lema \ref{Lem: Gronwall}).
+
+\begin{equation}\label{Equ. limit velocitat Gronwall}
+||v(\cdot,T)||_m\leq||v_0||_me^{\int_0^Tc_m|\nabla v(\cdot,t)|_{L^{\infty}}dt}
+\end{equation}
+
+Per tant tindrem una soluci\'{o} global si aconseguim fitar $\int_0^Tc_m|\nabla v(\cdot,t)|_{L^{\infty}}dt$. Per all\`{o} volem trobar una fita semblant a la de $||v(\cdot,T)||_m$, per\`{o} per $||\omega(\cdot,t)||_0$.
+
+L'equaci\'{o} de Navier-Stokes tamb\'{e} es pot escriure en termes de la vorticitat a trav\'{e}s de l'equaci\'{o} \eqref{Equ. Helmholtz viscos}.
+
+\begin{equation}
+\left\{\begin{array}{l}\omega_t+v\cdot\nabla\omega=\omega\cdot\nabla v+\nu\Delta\omega,\\\omega|_{t=0}=\omega_0.\end{array}\right.
+\end{equation}
+
+Si fem el producte escalar en $L^2$ per $\omega$, obtenim
+\[(\omega_t,\omega)+(v\cdot\nabla\omega,\omega)=(\omega\cdot\nabla v,\omega)+(\nu\Delta\omega,\omega).\]
+
+Calculem cadascun dels termes. En alguns casos integrarem per parts i el terme superficial tendir\`{a} cap a $0$ en fer tendir el domini d'integraci\'{o} cap a $\mathbb{R}^3$, ja que les funcions decreixen suficientment r\`{a}pid.
+
+\[(\omega_t,\omega)=\frac{1}{2}\frac{d}{dt}(\omega,\omega)=\frac{1}{2}\frac{d}{dt}||\omega||_0^2=||\omega||_0\frac{d}{dt}||\omega||_0\]
+
+\[((v\cdot\nabla\omega)_i,\omega_i)=\int_{\mathbb{R}^3}\langle v,\nabla\omega_i\rangle\omega_idx=\int_{\mathbb{R}^3}\langle v,\nabla\left(\frac{1}{2}\omega_i^2\right)\rangle dx=-\int_{\mathbb{R}^3}\frac{1}{2}\omega_i^2\diver v\,dx=-\int_{\mathbb{R}^3}0\,dx=0\]
+
+\[(\nu\Delta\omega_i,\omega_i)=\nu\int_{\mathbb{R}^3}\diver\nabla\omega_i\,\omega_idx=-\nu\int_{\mathbb{R}^3}\langle\nabla\omega_i,\nabla\omega_i\rangle dx=-\nu||\nabla\omega_i||_0^2\]
+
+Ajuntant tots aquests c\`{a}lculs obtenim
+\[||\omega||_0\frac{d}{dt}||\omega||_0=\int_{\mathbb{R}^3}\langle(\omega\cdot\nabla v),\omega\rangle dx-\nu||\nabla\omega||_0^2\leq\int_{\mathbb{R}^3}|\langle(\omega\cdot\nabla v),\omega\rangle|dx\leq\int_{\mathbb{R}^3}|\nabla v|_{L^{\infty}}|\omega|^2dx=|\nabla v|_{L^{\infty}}||\omega||_0^2,\]
+d'on
+\[\frac{d}{dt}||\omega||_0\leq|\nabla v(\cdot,t)|_{L^{\infty}}||\omega||_0.\]
+
+D'aqu\'{i}, aplicant el lema de Gr\"{o}nwall, obtenim la fita de $||\omega||_0$ que cerc\`{a}vem.
+
+\[||\omega(\cdot,t)||_0\leq||\omega_0||_0\exp\left(c\int_0^T|\nabla v(\cdot,t)|_{L^{\infty}}dt\right)\]
+
+Ara utilitzem la fita \eqref{Equ. limit gradient} de la proposici\'{o} \ref{Pro: limit gradient} i substituirem $||v||_m$ amb $m=3$ i $||\omega||_0$ per les respectives fites que hem trobat abans.
+
+\begin{align*}
+&|\nabla v(\cdot,t)|_{L^{\infty}}\leq c(1+\log^+||v||_3+\log^+||\omega||_0)(1+|\omega|_{L^{\infty}})\\
+&\leq c\left(1+\log||v_0||_3+\log||\omega_0||_0+(c_m+c)\int_0^t|\nabla v(\cdot,t)|_{L^{\infty}}dt\right)(1+|\omega|_{L^{\infty}})\\
+&\leq C\left(1+\int_0^t|\nabla v(\cdot,s)|_{L^{\infty}}ds\right)(1+|\omega(\cdot,t)|_{L^{\infty}})
+\end{align*}
+
+Apliquem un altre cop el lema de Gr\"{o}nwall.
+
+\[|\nabla v(\cdot,t)|_{L^{\infty}}\leq|\nabla v_0|_0e^{\int_0^t|\omega(\cdot,s)|_{L^{\infty}}ds}\]
+
+Observem llavors que si $\int_0^t|\omega(\cdot,s)|_{L^{\infty}}ds$ \'{e}s fitat, aleshores el gradient de $v$, $|\nabla v(\cdot,t)|_{L^{\infty}}$, ser\`{a} tamb\'{e} fitat i, per la desigualtat \eqref{Equ. limit velocitat Gronwall}, $||v||_m$ tamb\'{e} ser\`{a} fitat per $m\geq3$. Pel corol\textperiodcentered lari \ref{Cor: existencia global}, la soluci\'{o} existir\`{a} per tot temps.
+\end{proof}
+
+\begin{corollari}
+(Exist\`{e}ncia global de solucions en 2D) Sigui $v_0$ un camp bidimensional de velocitats inicial amb descomposici\'{o} d'energia localment finita $v_0=u_0+\overline v$ amb $u_0\in H^m(\mathbb{R}^2)$, $m>3$ i $\rot\overline v=\omega_0(r)\in C^{\infty}(\mathbb{R}^2)\cap L^2(\mathbb{R}^2)$. Aleshores existeix per tot temps una soluci\'{o} $v(x,t)=u(x,t)+\overline v(x,t)$ per l'equaci\'{o} de Navier-Stokes en dues dimensions tal que $u(x,t)\in L^{\infty}([0,T];H^m(\mathbb{R}^2))$ per tot $T>0$.
+\end{corollari}
+\begin{proof}
+Fem la demostraci\'{o} nom\'{e}s pel cas no visc\'{o}s $\nu=0$, on recuperem les equacions d'Euler. Del corol\textperiodcentered lari \ref{Cor: vorticitat 2D} del teorema de Helmholz tenim que la vorticitat es conserva al llarg de les traject\`{o}ries:
+\[\omega_t+v\cdot\nabla\omega=0.\]
+
+Per tot $x\in\mathbb{R}^2$ existir\`{a} un $y\in\mathbb{R}^2$ tal que la traject\`{o}ria que passa per $y$ a temps $0$ passi per $x$ a temps $t$.
+
+\[|\omega(\cdot,t)|_{L^{\infty}}=\sup_{x\in\mathbb{R}^2}|\omega(x,t)|=\sup_{y\in\mathbb{R}^2}|\omega(y,0)|=|\omega_0|_{L^{\infty}}\]
+
+Ara ja nom\'{e}s cal aplicar el teorema \ref{Teo: existencia global}.
+\end{proof}
+
+Hem concl\`{o}s que els fluids bidimensionals tenen solucions definides per tot temps.
+
+\section{Conclusions}
+
+Hem dedu\"{i}t les equacions d'Euler i de Navier-Stokes, les quals es deriven de l'equaci\'{o} de continu\"{i}tat i de l'equaci\'{o} de conservaci\'{o} de la quantitat de moviment. Aquestes descriuen i regeixen els fluids. La difer\`{e}ncia entre una i l'altra s\'{o}n les hip\`{o}tesis que es fan sobre els fluids ---i, m\'{e}s concretament, sobre el tensor d'esfor\c{c}os---. Per obtenir l'equaci\'{o} d'Euler, hem exigit que el fluid fos perfecte, \'{e}s a dir, no visc\'{o}s. Per obtenir l'equaci\'{o} de Navier-Stokes han calgut hip\`{o}tesis m\'{e}s febles, motiu pel qual t\'{e} validesa m\'{e}s general. Aquestes hip\`{o}tesis consisteixen en que el fluid sigui visc\'{o}s, donant lloc al coeficient de viscositat.
+
+Les equacions d'Euler s\'{o}n un cas particular de les equacions de Navier-Stokes quan la viscositat \'{e}s $0$. Apart de les hip\`{o}tesis que donen lloc a les equacions, ens hem restringit a estudiar els fluids incompressibles i homogenis.
+\vspace{3mm}
+
+Un cop enunciades les equacions de Navier-Stokes pels fluids viscosos, incompressibles i homogenis, hem procedit a estudiar l'exist\`{e}ncia, la unicitat i la regularitat de les seves solucions. Per all\`{o} hem utilitzat fites de l'energia. Primer hem demostrat la unicitat. Despr\'{e}s hem regularitzat les equacions mitjan\c{c}ant aproximacions de la identitat indexades en un par\`{a}metre per demostrar exist\`{e}ncia global de les equacions regularitzades. Aquestes solucions regularitzades han convergit cap a la soluci\'{o} de l'equaci\'{o} de Navier-Stokes sobre un cert interval de temps quan el par\`{a}metre tendia cap a $0$. Amb aix\`{o} hem provat exist\`{e}ncia local de solucions als espais de S\'{o}bolev. Tamb\'{e} hem vist que si la norma de la velocitat no tendeix cap a infinit quan el temps tendeix cap al temps maximal de soluci\'{o}, aleshores la soluci\'{o} est\`{a} definida per tot temps.
+\vspace{3mm}
+
+Despr\'{e}s hem tingut el problema que els arguments es basaven en fitar l'energia total del fluid. Tot i que la major part dels fluids tridimensionals tenen energia finita, pocs fluids bidimensionals tenen energia finita, pel qual no pod\'{i}em aplicar directament els arguments. Per aix\`{o} hem descompost la velocitat dels fluids bidimensionals en dues components: una component radial i una component d'energia finita. A aquesta segona component s\'{i} que hem pogut aplicar els arguments anteriors. Amb aix\`{o}, ja hem obtingut exist\`{e}ncia local i unicitat de solucions en dues i tres dimensions.
+
+Per \'{u}ltim, hem vist que la integral temporal de la norma del suprem de la vorticitat controla la norma de la velocitat. En el cas bidimensional, aquesta integral sempre \'{e}s fitada i per tant la norma de la velocitat tamb\'{e} \'{e}s fitada, cosa que implica l'exist\`{e}ncia global de solucions, \'{e}s a dir, que les solucions estiguin definides per tot temps.
+
+En tres dimensions, per\`{o}, no s'ha aconseguit encara donar una fita per la norma de la velocitat que permeti tenir solucions definides per tot temps.
+\vspace{3mm}
+
+En conclusi\'{o}, s'han demostrat la unicitat i l'exist\`{e}ncia local de solucions de les equacions de Navier-Stokes per fluids tridimensionals, aix\'{i} com la unicitat i l'exist\`{e}ncia global de solucions per fluids bidimensionals. Tanmateix, resta obert dins de la comunitat matem\`{a}tica el problema d'exist\`{e}ncia global de solucions en tres dimensions.
+
+\nocite{*}
+
+\bibliographystyle{plain}
+\bibliography{Bibliografia.bib}
+
+\newpage
+
+\appendix
+
+\section{Conceptes matem\`{a}tics}\label{App: apendix}
+
+Parlem una mica d'aproximacions de la unitat.
+
+\begin{definicio}
+Una \textbf{aproximaci\'{o} de la unitat} \'{e}s una fam\'{i}lia d'aplicacions $\phi_{\epsilon}:\mathbb{R}^n\rightarrow\mathbb{R}$ amb $\epsilon>0$ que compleix tres condicions:
+\begin{enumerate}
+\item per tot $\epsilon>0$, $\displaystyle{\int_{\mathbb{R}^n}\phi_{\epsilon}(x)dx=1}$,
+\item existeix un $C>0$ tal que per tot $\epsilon>0$, $\displaystyle{\int_{\mathbb{R}^n}|\phi_{\epsilon}(x)|dx\leq C}$,
+\item per tot $\delta>0$, $\displaystyle{\lim_{\epsilon\to0}\int_{|x|>\delta}|\phi_{\epsilon}(x)|dx=0}$.
+\end{enumerate}
+\end{definicio}
+
+Aquestes funcions s'utilitzen per regularitzar funcions que no s\'{o}n prou regulars.
+
+\begin{definicio}
+Siguin $f,g\in L^1(\mathbb{R}^n)$. Definim el seu \textbf{producte de convoluci\'{o}} com
+\[(f*g)(x)=\int_{\mathbb{R}^n}f(t)g(x-t)dt.\]
+\end{definicio}
+
+Donada una funci\'{o} $f$ i una aproximaci\'{o} de la unitat $\phi_{\epsilon}$, el producte de convoluci\'{o} $f*\phi_{\epsilon}$ \'{e}s una aproximaci\'{o} de $f$ que t\'{e} les propietats de regularitat de $\phi_{\epsilon}$. Per exemple, tot i que $f$ no sigui diferenciable, $f*\phi_{\epsilon}$ pot ser $C^{\infty}$ si $\phi_{\epsilon}$ ho \'{e}s. Ara veiem de quina manera $f*\phi_{\epsilon}$ s'aproxima a $f$.
+
+\begin{teorema}
+Siguin $f:\mathbb{R}^n\rightarrow\mathbb{R}$ cont\'{i}nua i $\phi_{\epsilon}\in C_0^{\infty}(\mathbb{R}^n)$ aproximaci\'{o} de la unitat. Llavors $f*\phi_{\epsilon}\xrightarrow[\epsilon\to0]{}f$ uniformement sobre compactes de $\mathbb{R}^n$.
+\end{teorema}
+
+Aquest \'{e}s un teorema cl\`{a}ssic en les aproximacions de la unitat i que permet recuperar $f$ a partir de $f*\phi_{\epsilon}$ fent tendir $\epsilon$ a 0. En aquest treball, per\`{o}, necessitem un resultat una mica m\'{e}s fort, que permeti aproximar fam\'{i}lies de funcions indexades tamb\'{e} sobre $\epsilon$. Aquest \'{e}s el teorema \ref{Teo: successio suavitzada}, el qual hem enunciat a la secci\'{o} \ref{Sse: miscellania} i que tornem a enunciar per demostrar-lo.
+
+\begin{teorema}
+Siguin $f_{\epsilon},f:\mathbb{R}^n\rightarrow\mathbb{R}$ cont\'{i}nues i uniformement fitades tals que $f_{\epsilon}$ convergeix uniformement sobre compactes a $f$ quan $\epsilon\to0$. Sigui $\phi_{\epsilon}\in C_0^{\infty}(\mathbb{R}^n)$ aproximaci\'{o} de la unitat per a la qual existeix un $K\subseteq\mathbb{R}^n$ compacte tal que per tot $\epsilon>0$, $\supp\phi_{\epsilon}\subseteq K$. Llavors $f_{\epsilon}*\phi_{\epsilon}\xrightarrow[\epsilon\to0]{}f$ uniformement de $\mathbb{R}^n$.
+\end{teorema}
+\begin{proof}
+Apliquem la definici\'{o} de convoluci\'{o} i la propietat de l'aproximaci\'{o} de la unitat per la qual la seva integral val $1$.
+
+\[\sup_{x\in\mathbb{R}^n}|(f_{\epsilon}*\phi_{\epsilon})(x)-f(x)|=\sup_{x\in\mathbb{R}^n}\left|\int_{\mathbb{R}^n}\phi_{\epsilon}(t)f_{\epsilon}(x-t)dt-\left(\int_{\mathbb{R}^n}\phi_{\epsilon}(t)dt\right)f(x)\right|\leq\sup_{x\in\mathbb{R}^n}\int_{\mathbb{R}^n}|\phi_{\epsilon}(t)||f_{\epsilon}(x-t)-f(x)|dt\]
+
+Per ser $f_{\epsilon}$ i $f$ uniformement fitades, existeix un $M>0$ tal que per tot $\epsilon>0$ i $x\in\mathbb{R}^n$, $|f_{\epsilon}(x)|,|f(x)|\leq M$.
+
+Sigui $\epsilon'>0$. Per la converg\`{e}ncia uniforme sobre compactes de $f_{\epsilon}$ a $f$, existeix un $\epsilon_0>0$ tal que per tot $0<\epsilon<\epsilon_0$ i tot $x\in K$, $|f_{\epsilon}(x)-f(x)|<\frac{1}{4C}\epsilon'$, on $C$ \'{e}s la constant que apareix a la definici\'{o} d'aproximaci\'{o} de la unitat.
+
+Per ser $f$ cont\'{i}nua, \'{e}s uniformement cont\'{i}nua sobre $K$ i per tant existeix un $\delta>0$ tal que per tots $x,t\in K$ amb $|x-t|<\delta$, $|f(x)-f(t)|<\frac{1}{4C}\epsilon'$.
+
+Per ser $\phi_{\epsilon}$ aproximaci\'{o} de la unitat, existeix un $\epsilon_1>0$ tal que per tot $0<\epsilon<\epsilon_1$,
+\[\int_{|x|>\delta}|\phi_{\epsilon}(x)|dt<\frac{1}{4M}\epsilon'.\]
+
+Sigui $0<\epsilon<\min\{\epsilon_0,\epsilon_1\}$. Amb el que hem vist, per tots $x,t\in K$ amb $|t|<\delta$, $|f_{\epsilon}(x-t)-f(x)|\leq|f_{\epsilon}(x-t)-f(x-t)|+|f(x-t)-f(x)|<\frac{1}{2C}\epsilon'$.
+
+\begin{align*}
+\int_{\mathbb{R}^n}|\phi_{\epsilon}(t)|&|f_{\epsilon}(x-t)-f(x)|dt=\int_{K\cap\{|t|<\delta\}}|\phi_{\epsilon}(t)||f_{\epsilon}(x-t)-f(x)|dt+\int_{K\cap\{|t|>\delta\}}|\phi_{\epsilon}(t)||f_{\epsilon}(x-t)-f(x)|dt\\
+\leq\,&\frac{1}{2C}\epsilon'\int_{K\cap\{|t|<\delta\}}|\phi_{\epsilon}(t)|dt+2M\int_{K\cap\{|t|>\delta\}}|\phi_{\epsilon}(t)|dt\leq\frac{1}{2C}\epsilon'C+2M\frac{1}{4M}\epsilon'=\epsilon'
+\end{align*}
+\end{proof}
+
+\begin{lema}
+Sigui $\mathcal{J}_{\epsilon}$ la convoluci\'{o} amb l'aproximaci\'{o} de la unitat definida en \eqref{Equ. aproximacio unitat}.
+\begin{enumerate}
+\item Commutativitat de l'aproximaci\'{o} de la unitat i la derivada distribucional: per $v\in H^m(\mathbb{R}^n)$ i $|\alpha|\leq m$, $D^{\alpha}(\mathcal{J}_{\epsilon}v)=\mathcal{J}_{\epsilon}(D^{\alpha}v)$.
+\item Per $u\in L^p(\mathbb{R}^n),v\in L^q(\mathbb{R}^n)$ amb $\frac{1}{p}+\frac{1}{q}=1$,
+\begin{equation}
+\int_{\mathbb{R}^n}(\mathcal{J}_{\epsilon}u)vdx=\int_{\mathbb{R}^n}u(\mathcal{J}_{\epsilon}v)dx.
+\end{equation}
+\item Per tot $v\in H^s(\mathbb{R}^n)$, $\mathcal{J}_{\epsilon}v$ convergeix a $v$ en $H^s(\mathbb{R}^n)$. Tamb\'{e} convergeix en $H^{s-1}(\mathbb{R}^n)$, on l'ordre de converg\`{e}ncia \'{e}s lineal amb $\epsilon$.
+\begin{equation}
+\lim_{\epsilon\to0}||\mathcal{J}_{\epsilon}v-v||_s=0
+\end{equation}
+\begin{equation}
+||\mathcal{J}_{\epsilon}v-v||_{s-1}\leq C\epsilon||v||_s
+\end{equation}
+\end{enumerate}
+\end{lema}
+\vspace{3mm}
+
+Vegem ara \emph{grosso modo} com es construeix la soluci\'{o} \'{u}nica que dona el teorema de Picard per les EDOs.
+
+\begin{teorema}
+(Punt fix) Sigui $(X,d)$ un espai m\`{e}tric i sigui $T:X\rightarrow X$ una aplicaci\'{o} contractiva, \'{e}s a dir, una aplicaci\'{o} per la qual existeix un $k<1$ tal que per tots $x,y\in X$, $d(T(x),T(y))\leq kd(x,y)$. Aleshores $T$ t\'{e} un \'{u}nic punt fix.
+\end{teorema}
+
+Aquest punt fix es troba com el l\'{i}mit de la successi\'{o} $T^n(x)$ fixant un $x\in X$ qualsevol.
+
+La unicitat i soluci\'{o} donades pel teorema de Picard es troben considerant un operador contractiu. Si escrivim $C((-T,T),U)$ l'espai de funcions cont\'{i}nues $(-T,T)\rightarrow U$, definim l'operador
+\begin{equation}
+\begin{split}
+T:C((-T,T),U)&\longrightarrow C((-T,T),U),\\
+\varphi&\longmapsto x_0+\int_0^tf(\varphi(s))ds
+\end{split}
+\end{equation}
+llavors es pot comprovar que \'{e}s contractiu. Justament una soluci\'{o} ser\`{a} una funci\'{o} $\varphi$ tal que $\varphi'(t)=f(\varphi(t))$. Integrant aquesta expressi\'{o} obtenim la formulaci\'{o} equivalent $T\varphi=\varphi$. \'{E}s a dir, una funci\'{o} ser\`{a} soluci\'{o} si i nom\'{e}s si \'{e}s punt fix de $T$. Pel teorema del punt fix que acabem de veure, aquesta funci\'{o} existeix i \'{e}s \'{u}nica, concloent aix\'{i} el teorema de Picard.
+\vspace{3mm}
+
+Exposem a continuaci\'{o} una s\`{e}rie de propietats de naturalitat de la projecci\'{o} de Leray definida al lema \ref{Lem: Leray original}.
+
+\begin{lema}
+Sigui $v\in H^m(\mathbb{R}^n)$ per $m$ enter no negatiu i sigui $v=Pv+\nabla\varphi$ la descomposici\'{o} donada per la projecci\'{o} de Leray. Aquesta descomposici\'{o} t\'{e} les seg\"{u}ents propietats:
+\begin{enumerate}
+\item $Pv,\nabla\varphi\in H^m(\mathbb{R}^N)$ i $\diver Pv=0$.
+\item \'{E}s lineal: $P(\lambda u+\mu v)=\lambda Pu+\mu Pv$.
+\item Les components de la descomposici\'{o} s\'{o}n ortogonals: $(Pv,\nabla\varphi)_m=0$ i $||Pv||_m^2+||\nabla\varphi||_m^2=||v||_m^2$.
+\item La projecci\'{o} commuta amb les derivades distribucionals: per tot $|\alpha|\leq m$, $PD^{\alpha}v=D^{\alpha}Pv$.
+\item La projecci\'{o} commuta amb les aproximacions de la unitat $\phi_{\epsilon}\in C_0^{\infty}(\mathbb{R}^N)$: $P(\phi_{\epsilon}*v)=\phi_{\epsilon}*Pv$.
+\item \'{E}s un operador sim\`{e}tric: $(Pu,v)_m=(u,Pv)_m$.
+\end{enumerate}
+\end{lema}
+
+\end{document}
