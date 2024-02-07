@@ -1,0 +1,330 @@
+\documentclass{beamer}
+\usepackage[utf 8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[catalan]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{url}
+
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\diver}{div}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\Or}{O}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Lip}{Lip}
+\newtheorem{teorema}{Teorema}
+\newtheorem{corollari}{Corol\textperiodcentered lari}
+\newtheorem{definicio}{Definici\'{o}}
+\newtheorem{proposicio}{Proposici\'{o}}
+\newtheorem{postulat}{Postulat}
+\newtheorem{lema}{Lema}
+
+\mode<presentation>{
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+}
+
+\title[Equaci\'{o} d'Euler]{{\textbf{Equaci\'{o} d'Euler i mec\`{a}nica de fluids}}}
+\author[Alejandro Plaza Gall\'{a}n]{\huge{Alejandro Plaza Gall\'{a}n}\\\vspace{2mm}\Large{Tutor: Joan Eugeni Mateu Bennassar}}
+\date{12 de juliol de 2021}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\centering
+\includegraphics[width=0.30\textwidth]{../imatges/logo-uab.png}\par\vspace{1cm}
+\end{frame}
+
+\section{Introducci\'{o}}
+\begin{frame}{Introducci\'{o}}
+\begin{itemize}
+\item Newton (segle XVII) va comen\c{c}ar l'estudi de la mec\`{a}nica dels fluids.
+\pause
+\item Euler (1755) va escriure les equacions diferencials que regeixen els fluids ideals: les equacions d'Euler.
+\pause
+\item Navier (1822) i Stokes (1845) van trobar les equacions diferencials que governen els fluids viscosos: les equacions de Navier-Stokes.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introducci\'{o}}
+L'institut Clay va proposar a l'any 2000 els 7 problemes del mil\textperiodcentered lenni:
+\pause
+\begin{itemize}
+\item la conjectura de Poincar\'{e};
+\item el problema P versus PN;
+\item la conjectura de Hodge;
+\item la hip\`{o}tesi de Riemann;
+\item l'exist\`{e}ncia de Yang-Mills i el salt de massa;
+\item l'exist\`{e}ncia i regularitat de Navier-Stokes;
+\item la conjectura de Birch Swinnerton-Dyer.
+\end{itemize}
+\pause
+L'\'{u}nic problema resolt fins ara ha estat la conjectura de Poincar\'{e}.
+\end{frame}
+
+\begin{frame}{Introducci\'{o}}
+Sobre les equacions de Navier-Stokes ja estan resolts els seg\"{u}ents problemes:
+\pause
+\begin{itemize}
+\item unicitat de soluci\'{o};
+\pause
+\item exist\`{e}ncia local de solucions prou regulars;
+\pause
+\item exist\`{e}ncia global de solucions regulars en 2D.
+\pause
+\end{itemize}
+Encara queda oberta l'exist\`{e}ncia global de solucions en 3D. En aix\`{o} consisteix el problema del mil\textperiodcentered lenni.
+\end{frame}
+
+\begin{frame}{Velocitat}
+Un fluid \'{e}s un continu que omple l'espai i est\`{a} format per part\'{i}cules, de manera que cada part\'{i}cula, a cada temps, ocupa un punt de l'espai.
+\vspace{3mm}
+
+El fluid evoluciona segons les part\'{i}cules es mouen amb el temps.
+\vspace{10mm}
+
+Juan Luis V\'{a}zquez (2003). \emph{Fundamentos matem\'{a}ticos de la mec\'{a}nica de fluidos}.
+\end{frame}
+
+\begin{frame}{Principi de conservaci\'{o} de la quantitat de moviment}
+\begin{definicio}
+Donat un volum $D_t\in\mathcal{B}(\mathbb{R}^3)$ a temps $t$, podem definir la seva \textbf{quantitat de moviment} com
+\[I(D_t)=\int_{D_t}\rho v\,dx,\]
+on $\rho:\mathbb{R}^3\times[0,T]\rightarrow[0,\infty)$ \'{e}s la densitat i $v:\mathbb{R}^3\times[0,T]\rightarrow\mathbb{R}^3$ \'{e}s la velocitat.
+\end{definicio}
+\pause
+\begin{postulat}
+La llei de conservaci\'{o} de la quantitat de moviment ens diu el seg\"{u}ent:
+\[\frac{dI(D_t)}{dt}=F_{\text{ext}}(D_t)+F_{\text{sup}}(D_t),\]
+on $F_{\text{ext}}$ s\'{o}n les forces externes i $F_{\text{sup}}$ s\'{o}n les forces superficials que s'exerceixen sobre $D_t$.
+\end{postulat}
+\end{frame}
+
+\begin{frame}{Principi de conservaci\'{o} de la quantitat de moviment}
+\begin{teorema}
+(Cauchy) Existeix una aplicaci\'{o} $S:\mathbb{R}^3\times[0,T]\rightarrow\mathcal{L}(\mathbb{R}^3,\mathbb{R}^3)$, anomenada \textbf{tensor d'esfor\c{c}os}, tal que per tot $D_t\in\mathcal{B}(\mathbb{R}^3)$ amb vora $\Gamma_t=\partial D_t$ regular,
+\[F_{\text{sup}}(D_t)=\int_{\Gamma_t}S(x,t)(n)\,dS,\]
+on $n$ \'{e}s el vector unitari normal a la superf\'{i}cie $\Gamma_t$.
+\end{teorema}
+\pause
+\begin{proposicio}
+La llei de conservaci\'{o} de la quantitat de moviment \'{e}s equivalent a:
+\[\frac{\partial v}{\partial t}+v\cdot\nabla v=\frac{1}{\rho}F+\frac{1}{\rho}\diver S.\]
+$F$ \'{e}s la densitat de forces externes i $\diver$ la diverg\`{e}ncia espacial d'un tensor.
+\end{proposicio}
+\end{frame}
+
+\begin{frame}{Deducci\'{o} de les equacions d'Euler}
+\begin{definicio}
+Es diu que un fluid \'{e}s \textbf{perfecte} quan existeix una aplicaci\'{o} $p:\mathbb{R}^3\times[0,T]\rightarrow\mathbb{R}$ tal que $S(x,t)=-p(x,t)I$, on $I:\mathbb{R}^3\rightarrow\mathbb{R}^3$ \'{e}s la identitat.
+
+Aquesta funci\'{o} $p$ s'anomena \textbf{pressi\'{o}} interna del fluid.
+\end{definicio}
+\pause
+Pels fluids perfectes, queda
+\[\diver S=-\nabla p.\]
+\end{frame}
+
+\begin{frame}{Deducci\'{o} de les equacions d'Euler}
+\begin{definicio}
+Diem que un fluid \'{e}s \textbf{incompressible} quan
+\[\diver v=0.\]
+\end{definicio}
+\pause
+\begin{definicio}
+Un fluid es diu \textbf{homogeni} quan
+\[\nabla\rho=0,\]
+on $\nabla$ fa refer\`{e}ncia al gradient espacial.
+\end{definicio}
+\pause
+\begin{definicio}
+Els fluids perfectes, incompressibles i homogenis s'anomenen \textbf{ideals}.
+\end{definicio}
+\end{frame}
+
+\begin{frame}{Deducci\'{o} de les equacions d'Euler}
+Les equacions d'Euler per fluids ideals (considerant $\rho=1$) s\'{o}n:
+\[\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\nabla p+F,}\\\diver v=0.\end{array}\right.\]
+\pause
+Les \textbf{traject\`{o}ries} s\'{o}n les solucions de la EDO
+\[\left\{\begin{array}{l}\dot{x}=v(x,t),\\x(0)=y.\end{array}\right.\]
+\pause
+\begin{definicio}
+Definim la \textbf{vorticitat} $\omega$ com el rotacional de la velocitat $v$.
+\[\omega=\rot v\]
+\end{definicio}
+\end{frame}
+
+\begin{frame}{Deducci\'{o} de les equacions de Navier-Stokes}
+\begin{definicio}
+Un \textbf{fluid visc\'{o}s} \'{e}s aquell que t\'{e} com a tensor d'esfor\c{c}os
+\[S=-p\,I+\lambda\diver v\,I+2\rho\nu D,\text{ on }D=\frac{1}{2}(dv+dv^{\dagger}).\]
+per coeficients $\lambda,\nu$.
+\end{definicio}
+\pause
+Les equacions de Navier-Stokes per fluids viscosos incompressibles homogenis (considerant $\rho=1$) s\'{o}n:
+\[\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\nabla p+\nu\Delta v+F,}\\\diver v=0.\end{array}\right.\]
+\pause
+Quan $\nu=0$ es recuperen les equacions d'Euler pels fluids ideals.
+\end{frame}
+
+\section{Exist\`{e}ncia i unicitat de solucions}
+
+\begin{frame}{Unicitat de soluci\'{o}}
+Busquem exist\`{e}ncia i unicitat de solucions prou regulars de les equacions de Navier-Stokes.
+\[\left\{\begin{array}{l}\displaystyle{\frac{\partial v}{\partial t}+v\cdot\nabla v=-\nabla p+\nu\Delta v+F,}\\\diver v=0.\end{array}\right.\]
+
+Per $m$ enter no negatiu, designem per $H^m(\mathbb{R}^N)$ l'espai de S\'{o}bolev $W^{m,2}(\mathbb{R}^N)$ i per $||\cdot||_m$ la seva norma.
+\vspace{9mm}
+
+A. J. Majda, A. L. Bertozzi, i A. Ogawa (2002). \emph{Vorticity and incompressible flow}.
+\end{frame}
+
+\begin{frame}{Unicitat de soluci\'{o}}
+\begin{proposicio}
+Siguin $v_1,v_2:\mathbb{R}^N\times[0,T]\rightarrow\mathbb{R}^N$ solucions llises de l'equaci\'{o} de Navier-Stokes amb forces $F_1,F_2$ respectivament i la mateixa viscositat $\nu$. Suposem a m\'{e}s que a temps $t$ fix, $v_1(\cdot,t),v_2(\cdot,t)\in L^2(\mathbb{R}^N)$.
+\begin{align*}
+\sup_{0\leq t\leq T}||v_1-v_2||_0\leq\left(||(v_1-v_2)|_{t=0}||_0+\int_0^T||F_1-F_2||_0dt\right)\exp&\left(\vphantom{\int_0^T}\right.\\
+\left.\int_0^T|\nabla v_2|_{L^{\infty}}dt\right)&
+\end{align*}
+\end{proposicio}
+\pause
+\begin{corollari}
+(Unicitat de soluci\'{o}) Siguin $v_1$ i $v_2$ dos solucions llises de quadrat integrable de l'equaci\'{o} sobre $[0,T]$ amb la mateixa condici\'{o} inicial $v_0$ i la mateixa for\c{c}a $F$. Aleshores
+\[v_1=v_2.\]
+\end{corollari}
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global de solucions regularitzades}
+Designem l'aproximaci\'{o} de la unitat
+\[\mathcal{J}_{\epsilon}v=\phi_{\epsilon}*v\text{, on }\phi_{\epsilon}(x)=\frac{1}{\epsilon^N}\rho\left(\frac{x}{\epsilon}\right),\]
+per una certa funci\'{o} $\rho\in C_0^{\infty}(\mathbb{R}^N)$ radial qualsevol.
+\pause
+
+\begin{definicio}
+Sigui $v\in H^m(\mathbb{R}^N)$. Denotem per $Pv$ la seva \textbf{projecci\'{o} de Leray}, que \'{e}s la projecci\'{o} ortogonal sobre l'espai de funcions de diverg\`{e}ncia nul\textperiodcentered la $V^m$.
+\end{definicio}
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global de solucions regularitzades}
+L'equaci\'{o} de Navier-Stokes regularitzada i projectada queda
+\[v_t^{\epsilon}+P\mathcal{J}_{\epsilon}\big((\mathcal{J}_{\epsilon}v^{\epsilon})\cdot\nabla(\mathcal{J}_{\epsilon}v^{\epsilon})\big)=\nu\mathcal{J}_{\epsilon}^2\Delta v^{\epsilon}\]
+Es pot expressar com la EDO
+\[\left\{\begin{array}{l}\displaystyle{\frac{dv^{\epsilon}}{dt}=F_{\epsilon}(v^{\epsilon})},\\v^{\epsilon}|_{t=0}=v_0,\end{array}\right.\]
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global de solucions regularitzades}
+\begin{teorema}
+(Picard) Sigui $U\subseteq B$ un obert d'un espai de Banach $B$ i sigui $f:U\rightarrow B$ una aplicaci\'{o} localment Lipschitz.
+
+Aleshores per tot $x_0\in U$ existeix un $T>0$ tal que la seg\"{u}ent EDO:
+\[\left\{\begin{array}{l}\displaystyle{\frac{dx}{dt}=f(x),}\\x|_{t=0}=x_0,\end{array}\right.\]
+t\'{e} una soluci\'{o} $\varphi:(-T,T)\rightarrow U$ de classe $C^1$ i \'{e}s \'{u}nica.
+\end{teorema}
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global de solucions regularitzades}
+\begin{proposicio}
+Sigui $v_0\in V^m$ una condici\'{o} inicial. Aleshores per tot $\epsilon>0$ existeix una \'{u}nica soluci\'{o} $v^{\epsilon}$ definida sobre $[0,T_{\epsilon})$ per la EDO $v_t^{\epsilon}=F_{\epsilon}(v^{\epsilon})$.
+\end{proposicio}
+\pause
+\begin{teorema}
+(Exist\`{e}ncia global de solucions regularitzades) Donada una condici\'{o} inicial $v_0\in V^m$, per tot $\epsilon>0$ existeix una \'{u}nica soluci\'{o} $v^{\epsilon}$ definida sobre $[0,\infty)$ per l'equaci\'{o} de Navier-Stokes regularitzada.
+\end{teorema}
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia local de solucions}
+\begin{lema}
+La fam\'{i}lia de solucions $v^{\epsilon}$ forma una successi\'{o} de Cauchy sobre $L^2(\mathbb{R}^N)$.
+\end{lema}
+\pause
+Per aquest lema, existeix una $v\in L^2(\mathbb{R}^N)$ tal que $v^{\epsilon}\xrightarrow[\epsilon\to0]{}v$ a $L^2(\mathbb{R}^N)$. Aquesta converg\`{e}ncia es pot ampliar a espais m\'{e}s restrictius.
+\vspace{3mm}
+\pause
+
+A m\'{e}s es pot comprovar que aquest l\'{i}mit $v_t=\nu\Delta v-P(v\cdot\nabla v)$.
+\vspace{3mm}
+\pause
+
+Amb aix\`{o} hem obtingut la soluci\'{o} $v$ a l'equaci\'{o} de Navier-Stokes original.
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia local de solucions}
+\begin{teorema}
+(Exist\`{e}ncia local de solucions) Sigui $v_0\in V^m$ una condici\'{o} inicial. Per tot temps $T>0$ amb la fita
+\[T<\frac{1}{c_m||v_0||_m},\]
+i per tota viscositat $\nu$ existeix una \'{u}nica soluci\'{o} $v$ definida sobre $[0,T]$ per l'equaci\'{o} de Navier-Stokes.
+\end{teorema}
+\pause
+\begin{corollari}
+Existeix un temps maximal $T^*$ d'exist\`{e}ncia (que pot ser infinit) i una soluci\'{o} \'{u}nica $v$ sobre $[0,T^*)$. A m\'{e}s, si $T^*$ \'{e}s finit, aleshores s'ha de complir necess\`{a}riament
+\[\lim_{t\to T^*}||v(\cdot,t)||_m=\infty.\]
+\end{corollari}
+\end{frame}
+
+\begin{frame}{Unicitat i exist\`{e}ncia local per fluids bidimensionals}
+Pels arguments anteriors hem hagut de suposar que l'energia era finita. Molts fluids tridimensional compleixen aix\`{o}, per\`{o} pocs bidimensionals.
+\pause
+\vspace{2mm}
+
+Definim la \textbf{descomposici\'{o} de energia radial} d'un camp de velocitat incompressible i llis $v$ sobre $\mathbb{R}^2$ com
+\[v(x)=u(x)+\overline v(x),\]
+\pause
+\[\int|u(x)|^2dx<\infty,\hspace{5mm}\diver u=0,\]
+\pause
+on $\overline v$ t\'{e} simetria radial.
+\pause
+
+Per demostrar unicitat i exist\`{e}ncia local, es segueixen arguments an\`{a}legs al cas tridimensional aplicats a la component $u$, que t\'{e} energia finita.
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global per fluids bidimensionals}
+\begin{teorema}
+Si el temps maximal $T^*$ d'exist\`{e}ncia de solucions \'{e}s finit, aleshores necess\`{a}riament
+\[\lim_{t\to T^*}\int_0^t|\omega(\cdot,\tau)|_{L^{\infty}}d\tau=\infty.\]
+\end{teorema}
+\pause
+\begin{corollari}
+Existeix un temps maximal $T^*$ d'exist\`{e}ncia (que pot ser infinit) i una soluci\'{o} \'{u}nica $v$ sobre $[0,T^*)$. A m\'{e}s, si $T^*$ \'{e}s finit, aleshores s'ha de complir necess\`{a}riament
+\[\lim_{t\to T^*}||v(\cdot,t)||_m=\infty.\]
+\end{corollari}
+\pause
+$||v(\cdot,t)||_m$ est\`{a} fitat per $\int_0^t|\omega(\cdot,s)|_{L^{\infty}}ds$.
+\end{frame}
+
+\begin{frame}{Exist\`{e}ncia global per fluids bidimensionals}
+Pels fluids ideals bidimensionals tenim un resultat que ens diu que la vorticitat es conserva al llarg de les traject\`{o}ries:
+\[\frac{d\omega}{dt}=0.\]
+Per tant $|\omega|_{L^{\infty}}$ ser\`{a} constant.
+\pause
+\begin{corollari}
+(Exist\`{e}ncia global de solucions en 2D) Sigui $v_0$ un camp bidimensional de velocitats inicial. Aleshores existeix per tot temps una soluci\'{o} $v$ per l'equaci\'{o} de Navier-Stokes en dues dimensions.
+\end{corollari}
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}{Conclusions}
+\begin{itemize}
+\item Hem dedu\"{i}t l'equaci\'{o} d'Euler pels fluids ideals.
+\pause
+\item Hem dedu\"{i}t l'equaci\'{o} de Navier-Stokes pels fluids viscosos.
+\pause
+\item Hem vist la unicitat de soluci\'{o} de l'equaci\'{o} de Navier-Stokes.
+\pause
+\item Hem vist l'exist\`{e}ncia global de solucions de l'equaci\'{o} regularitzada.
+\pause
+\item Hem obtingut la soluci\'{o} local de l'equaci\'{o} de Navier-Stokes com a l\'{i}mit de solucions regularitzades.
+\pause
+\item Hem descompost la velocitat dels fluids en 2D en una component d'energia finita i una component radial.
+\pause
+\item Hem aconseguit solucions globals definides per tot temps en 2D.
+\pause
+\item Queda obert el problema de trobar exist\`{e}ncia de solucions globals en 3D.
+\end{itemize}
+\end{frame}
+
+\end{document}
